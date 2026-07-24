@@ -57,52 +57,61 @@
             transition: background 0.4s ease, color 0.4s ease;
         }
 
-        /* Navigation */
+        /* Navigation — Sidebar */
         .top-nav {
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            bottom: 0;
+            width: 220px;
             z-index: 100;
             background: var(--bg-nav);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 24px;
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             transition: background 0.4s ease, border 0.4s ease, box-shadow 0.3s ease;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.03);
+            overflow-y: auto;
         }
 
         .top-nav.scrolled {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+            box-shadow: 2px 0 16px rgba(0,0,0,0.06);
         }
 
         .nav-brand {
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-primary);
             transition: color 0.3s;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
         .nav-actions {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 16px;
+            flex: 1;
         }
 
         /* Theme Toggle */
         .theme-toggle {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 6px 12px;
+            border-radius: 8px;
+            padding: 8px 12px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 6px;
             transition: all 0.3s ease;
+            margin-top: auto;
         }
 
         .theme-toggle:hover {
@@ -110,18 +119,19 @@
             color: var(--accent);
         }
 
-        /* View Tabs */
+        /* View Tabs — Vertical */
         .view-tabs {
             display: flex;
+            flex-direction: column;
             gap: 4px;
-            background: var(--bg-secondary);
-            padding: 4px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            border: none;
         }
 
         .view-tab {
-            padding: 6px 16px;
+            padding: 10px 14px;
             border-radius: 8px;
             font-size: 0.8rem;
             font-weight: 500;
@@ -131,6 +141,7 @@
             color: var(--text-secondary);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            text-align: left;
         }
 
         .view-tab.active {
@@ -142,8 +153,8 @@
 
         .view-tab:hover:not(.active) {
             color: var(--text-primary);
-            background: var(--border);
-            transform: translateY(-1px);
+            background: var(--bg-secondary);
+            transform: translateX(3px);
         }
 
         .view-tab:active:not(.active) {
@@ -154,6 +165,8 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            margin-left: 252px;
+            margin-right: 260px;
             padding: 32px 24px;
             animation: fadeIn 0.5s ease;
         }
@@ -161,6 +174,153 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+
+        /* Right Panel */
+        .right-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 240px;
+            background: var(--bg-nav);
+            border-left: 1px solid var(--border);
+            padding: 24px 16px;
+            overflow-y: auto;
+            transition: background 0.4s ease, border 0.4s ease;
+            z-index: 50;
+        }
+
+        .right-panel-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .rp-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .rp-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .rp-card-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .rp-card-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1.2;
+        }
+
+        .rp-card-sub {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .rp-progress {
+            margin-top: 8px;
+        }
+
+        .rp-progress-track {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .rp-progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        .rp-next-post {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .rp-next-post:hover {
+            border-left-width: 5px;
+            transform: translateX(2px);
+        }
+
+        .rp-next-post .rp-next-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .rp-next-post .rp-next-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .rp-next-post .rp-next-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .rp-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 16px 0;
+        }
+
+        .rp-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .rp-link:hover {
+            background: var(--bg-secondary);
+            color: var(--accent);
+            border-color: var(--border);
+            transform: translateX(2px);
+        }
+
+        .rp-link .rp-link-icon {
+            font-size: 1rem;
         }
 
         /* Views */
@@ -534,14 +694,87 @@
             .cal-grid { grid-template-columns: repeat(3, 1fr); }
             .header h1 { font-size: 1.5rem; }
             .header-meta { flex-direction: column; gap: 6px; }
-            .top-nav { padding: 10px 16px; }
-            .view-tabs { display: none; }
+            .top-nav {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 240px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .top-nav.mobile-open {
+                left: 0;
+                box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+            }
+            .container {
+                margin-left: 0;
+                margin-right: 0;
+                padding: 80px 16px 32px;
+            }
+            .right-panel { display: none; }
+            .mobile-menu-btn { display: flex; }
+            .mobile-overlay { display: block; }
+        }
+
+        @media (min-width: 769px) and (max-width: 1280px) {
+            .right-panel { display: none; }
+            .container {
+                margin-right: 24px;
+            }
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 200;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu-btn span {
+            font-size: 1.2rem;
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            pointer-events: all;
         }
 
         @media print {
             body { background: #fff; }
             .top-nav { display: none; }
+            .container { margin-left: 0; }
             .card { box-shadow: none; break-inside: avoid; }
+            .mobile-menu-btn { display: none; }
         }
 
         /* Gerar Post */
@@ -1258,11 +1491,6 @@
         /* Responsive for new tabs */
         @media (max-width: 768px) {
             .dash-stats { grid-template-columns: repeat(2, 1fr); }
-            .view-tabs {
-                overflow-x: auto;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
-            }
         }
 
         /* Metric inputs */
@@ -1434,7 +1662,11 @@
 </head>
 <body>
 
-    <!-- Top Navigation -->
+    <!-- Mobile menu button -->
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><span>☰</span></button>
+    <div class="mobile-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
+
+    <!-- Sidebar Navigation -->
     <nav class="top-nav">
         <span class="nav-brand">CloudDog — Social Selling</span>
         <div class="nav-actions">
@@ -1454,6 +1686,56 @@
             </button>
         </div>
     </nav>
+
+    <!-- Right Panel -->
+    <aside class="right-panel" id="right-panel">
+        <div class="right-panel-title">Status do Projeto</div>
+
+        <div class="rp-card">
+            <div class="rp-card-label">Dia Atual</div>
+            <div class="rp-card-value" id="rp-day">—</div>
+            <div class="rp-card-sub">de 90 dias</div>
+            <div class="rp-progress">
+                <div class="rp-progress-track">
+                    <div class="rp-progress-fill" id="rp-bar" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rp-card">
+            <div class="rp-card-label">Posts Publicados</div>
+            <div class="rp-card-value" id="rp-posts">0/16</div>
+            <div class="rp-card-sub" id="rp-posts-pct">0% concluído</div>
+        </div>
+
+        <div class="rp-card">
+            <div class="rp-card-label">Semana</div>
+            <div class="rp-card-value" id="rp-week">—</div>
+            <div class="rp-card-sub">de 13 semanas</div>
+        </div>
+
+        <div class="rp-divider"></div>
+
+        <div class="right-panel-title">Próximo Post</div>
+        <div class="rp-next-post" id="rp-next-post">
+            <div class="rp-next-label">A publicar</div>
+            <div class="rp-next-title" id="rp-next-title">—</div>
+            <div class="rp-next-meta" id="rp-next-meta">—</div>
+        </div>
+
+        <div class="rp-divider"></div>
+
+        <div class="right-panel-title">Atalhos</div>
+        <a href="https://gemini.google.com/" target="_blank" class="rp-link">
+            <span class="rp-link-icon">🔵</span> Abrir Gemini
+        </a>
+        <a href="https://www.linkedin.com/feed/" target="_blank" class="rp-link">
+            <span class="rp-link-icon">🔗</span> Abrir LinkedIn
+        </a>
+        <a href="#" class="rp-link" onclick="switchView('gerarpost'); document.querySelector('[onclick*=gerarpost]').classList.add('active');">
+            <span class="rp-link-icon">🤖</span> Gerar Post
+        </a>
+    </aside>
 
     <div class="container">
 
@@ -2337,6 +2619,7 @@
             document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('view-' + view).classList.add('active');
             event.target.classList.add('active');
+            closeMobileMenu();
 
             // Update header
             const config = HEADER_CONFIG[view];
@@ -2384,6 +2667,21 @@
                 nav.classList.remove('scrolled');
             }
         });
+
+        // Mobile menu
+        function toggleMobileMenu() {
+            const nav = document.querySelector('.top-nav');
+            const overlay = document.getElementById('mobile-overlay');
+            nav.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const nav = document.querySelector('.top-nav');
+            const overlay = document.getElementById('mobile-overlay');
+            nav.classList.remove('mobile-open');
+            overlay.classList.remove('active');
+        }
 
         // ===== POSTS SYSTEM =====
         const POSTS = [
@@ -2507,6 +2805,52 @@
 
         updateDashboard();
 
+        // ===== RIGHT PANEL =====
+        function updateRightPanel() {
+            const startStr = localStorage.getItem('ss-dash-start');
+            const saved = JSON.parse(localStorage.getItem('ss-dash-posts') || '{}');
+            const doneCount = POSTS.filter((_, i) => saved[i] && saved[i].done).length;
+
+            // Progress
+            let day = 0, week = 0;
+            if (startStr) {
+                const start = new Date(startStr);
+                const now = new Date();
+                const diffMs = now - start;
+                const diffDays = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1);
+                day = Math.min(diffDays, 90);
+                week = Math.min(Math.ceil(day / 7), 13);
+            }
+
+            const rpDay = document.getElementById('rp-day');
+            const rpBar = document.getElementById('rp-bar');
+            const rpWeek = document.getElementById('rp-week');
+            const rpPosts = document.getElementById('rp-posts');
+            const rpPostsPct = document.getElementById('rp-posts-pct');
+
+            if (rpDay) rpDay.textContent = day || '—';
+            if (rpBar) rpBar.style.width = Math.round((day / 90) * 100) + '%';
+            if (rpWeek) rpWeek.textContent = week || '—';
+            if (rpPosts) rpPosts.textContent = doneCount + '/16';
+            if (rpPostsPct) rpPostsPct.textContent = Math.round((doneCount / 16) * 100) + '% concluído';
+
+            // Next post
+            const nextIndex = POSTS.findIndex((_, i) => !saved[i] || !saved[i].done);
+            const rpNextTitle = document.getElementById('rp-next-title');
+            const rpNextMeta = document.getElementById('rp-next-meta');
+
+            if (nextIndex >= 0 && rpNextTitle && rpNextMeta) {
+                const next = POSTS[nextIndex];
+                rpNextTitle.textContent = next.title;
+                rpNextMeta.textContent = next.week.replace('semana', 'Sem ') + ' · ' + next.day + ' · ' + next.pillarLabel;
+            } else if (rpNextTitle) {
+                rpNextTitle.textContent = 'Todos publicados! 🎉';
+                rpNextMeta.textContent = '';
+            }
+        }
+
+        updateRightPanel();
+
         // ===== DASHBOARD POSTS CHECKLIST =====
         function getDashPosts() {
             return JSON.parse(localStorage.getItem('ss-dash-posts') || '{}');
@@ -2605,6 +2949,7 @@
             }
             saveDashPosts(saved);
             renderDashPosts();
+            updateRightPanel();
         }
 
         function setDashPostDate(index, date) {
