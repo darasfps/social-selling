@@ -22,8 +22,8 @@
             --blue-light: rgba(14, 165, 233, 0.08);
             --success: #10b981;
             --danger: #ef4444;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 10px 24px rgba(0,0,0,0.06);
             --header-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
         }
 
@@ -42,8 +42,8 @@
             --blue-light: rgba(56, 189, 248, 0.1);
             --success: #34d399;
             --danger: #f87171;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.15);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.2), 0 12px 28px rgba(0,0,0,0.25);
             --header-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
         }
 
@@ -54,7 +54,7 @@
             background: var(--bg-secondary);
             color: var(--text-primary);
             line-height: 1.7;
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.4s ease, color 0.4s ease;
         }
 
         /* Navigation */
@@ -68,14 +68,20 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            backdrop-filter: blur(10px);
-            transition: background 0.3s, border 0.3s;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: background 0.4s ease, border 0.4s ease, box-shadow 0.3s ease;
+        }
+
+        .top-nav.scrolled {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
         }
 
         .nav-brand {
             font-weight: 700;
             font-size: 0.9rem;
             color: var(--text-primary);
+            transition: color 0.3s;
         }
 
         .nav-actions {
@@ -96,7 +102,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
         .theme-toggle:hover {
@@ -123,18 +129,25 @@
             border: none;
             background: transparent;
             color: var(--text-secondary);
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         .view-tab.active {
             background: var(--accent);
             color: #fff;
-            box-shadow: 0 2px 4px rgba(249,115,22,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 4px 10px rgba(249,115,22,0.2);
+            transform: scale(1.02);
         }
 
         .view-tab:hover:not(.active) {
             color: var(--text-primary);
             background: var(--border);
+            transform: translateY(-1px);
+        }
+
+        .view-tab:active:not(.active) {
+            transform: scale(0.97);
         }
 
         /* Container */
@@ -142,11 +155,22 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 32px 24px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Views */
-        .view { display: none; }
-        .view.active { display: block; }
+        .view { display: none; opacity: 0; transform: translateY(8px); }
+        .view.active { display: block; animation: fadeInView 0.4s ease forwards; }
+
+        @keyframes fadeInView {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* Header */
         .header {
@@ -156,6 +180,8 @@
             margin-bottom: 32px;
             position: relative;
             overflow: hidden;
+            transition: background 0.6s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 30px rgba(0,0,0,0.1), 0 20px 60px rgba(0,0,0,0.05);
         }
 
         .header::before {
@@ -165,8 +191,15 @@
             right: -20%;
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, var(--orb-color, rgba(249,115,22,0.15)) 0%, transparent 70%);
             border-radius: 50%;
+            transition: background 0.6s ease;
+            animation: floatOrb 8s ease-in-out infinite;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, 15px) scale(1.05); }
         }
 
         .header-content { position: relative; z-index: 1; }
@@ -182,6 +215,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 16px;
+            transition: all 0.4s ease;
         }
 
         .header h1 {
@@ -189,12 +223,14 @@
             font-size: 2rem;
             font-weight: 800;
             margin-bottom: 6px;
+            transition: all 0.4s ease;
         }
 
         .header h2 {
             color: #cbd5e1;
             font-size: 1rem;
             font-weight: 400;
+            transition: all 0.4s ease;
         }
 
         .header-meta {
@@ -219,7 +255,13 @@
             margin-bottom: 20px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
-            transition: background 0.3s, border 0.3s;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 10px 24px rgba(0,0,0,0.06), 0 20px 48px rgba(0,0,0,0.03);
+            transform: translateY(-2px);
+            border-color: rgba(249,115,22,0.15);
         }
 
         .card-title {
@@ -251,11 +293,15 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 20px;
-            transition: border-color 0.2s, background 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: var(--bg-secondary);
         }
 
-        .pillar:hover { border-color: var(--accent); }
+        .pillar:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04), 0 12px 28px rgba(0,0,0,0.06);
+        }
 
         .pillar h4 {
             font-size: 0.92rem;
@@ -290,7 +336,12 @@
             padding: 14px 10px;
             text-align: center;
             border: 1px solid var(--border);
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cal-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .cal-item.post { border-color: var(--accent); }
@@ -343,7 +394,7 @@
             color: var(--text-secondary);
         }
 
-        tr:hover td { background: var(--bg-secondary); }
+        tr:hover td { background: var(--bg-secondary); transition: background 0.2s ease; }
 
         /* Tags */
         .tags { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -356,6 +407,14 @@
             color: var(--text-secondary);
             font-weight: 500;
             border: 1px solid var(--border);
+            transition: all 0.25s ease;
+            cursor: default;
+        }
+
+        .tag:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-1px);
         }
 
         /* Engage boxes */
@@ -364,6 +423,13 @@
             border-radius: 10px;
             padding: 18px;
             border-left: 3px solid var(--blue);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .engage-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03), 0 8px 20px rgba(0,0,0,0.05);
+            border-left-width: 5px;
         }
 
         .engage-box h4 {
@@ -435,6 +501,12 @@
             font-size: 0.72rem;
             font-weight: 700;
             flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover .step-dot {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 4px rgba(14,165,233,0.2);
         }
 
         .step span {
@@ -513,9 +585,19 @@
             padding: 20px;
             margin-top: 16px;
             display: none;
+            opacity: 0;
+            transform: translateY(10px);
         }
 
-        .prompt-output.visible { display: block; }
+        .prompt-output.visible {
+            display: block;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .prompt-output pre {
             white-space: pre-wrap;
@@ -547,10 +629,19 @@
             border: none;
             background: var(--accent);
             color: #fff;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 4px 12px rgba(249,115,22,0.2);
         }
 
-        .btn-gerar:hover { opacity: 0.85; }
+        .btn-gerar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 8px 24px rgba(249,115,22,0.25);
+        }
+
+        .btn-gerar:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 2px 6px rgba(249,115,22,0.15);
+        }
 
         .btn-open-ai {
             padding: 10px 18px;
@@ -561,14 +652,21 @@
             border: 1px solid var(--border);
             background: var(--bg-card);
             color: var(--text-primary);
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
-        .btn-open-ai:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-open-ai:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.06);
+        }
+
+        .btn-open-ai:active { transform: translateY(0); }
 
         /* Notes section */
         .notes-header {
@@ -591,15 +689,23 @@
             font-weight: 600;
             cursor: pointer;
             border: none;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-accent {
             background: var(--accent);
             color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 3px 8px rgba(249,115,22,0.15);
         }
 
-        .btn-accent:hover { opacity: 0.85; }
+        .btn-accent:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 6px 16px rgba(249,115,22,0.2);
+        }
+
+        .btn-accent:active {
+            transform: translateY(0);
+        }
 
         .btn-outline {
             background: transparent;
@@ -625,7 +731,12 @@
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 14px;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .note-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
         .note-card-header {
@@ -777,18 +888,25 @@
             border: 1px solid var(--border);
             background: transparent;
             color: var(--text-secondary);
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .filter-btn.active {
             background: var(--accent);
             color: #fff;
             border-color: var(--accent);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 3px 8px rgba(249,115,22,0.15);
+            transform: scale(1.02);
         }
 
         .filter-btn:hover:not(.active) {
             border-color: var(--accent);
             color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .filter-btn:active {
+            transform: scale(0.95);
         }
 
         .post-item {
@@ -797,7 +915,13 @@
             border-radius: 10px;
             padding: 18px;
             margin-bottom: 12px;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .post-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03), 0 10px 24px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
         }
 
         .post-item-header {
@@ -871,10 +995,17 @@
             border: 1px solid var(--accent);
             background: transparent;
             color: var(--accent);
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .btn-copy:hover { background: var(--accent); color: #fff; }
+        .btn-copy:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 4px 12px rgba(249,115,22,0.15);
+        }
+
+        .btn-copy:active { transform: scale(0.95); }
         .btn-copy.copied { background: var(--success); border-color: var(--success); color: #fff; }
 
         .btn-expand {
@@ -897,6 +1028,12 @@
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .template-stage:hover {
+            border-color: var(--blue);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03), 0 8px 20px rgba(0,0,0,0.05);
         }
 
         .template-stage-header {
@@ -934,6 +1071,13 @@
             padding: 12px 14px;
             margin-bottom: 10px;
             position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .template-msg:hover {
+            border-left-width: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transform: translateX(3px);
         }
 
         .template-msg p {
@@ -984,6 +1128,13 @@
             border-radius: 10px;
             padding: 16px;
             text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04), 0 12px 24px rgba(0,0,0,0.06);
+            border-color: var(--accent);
         }
 
         .stat-card .stat-value {
@@ -1018,6 +1169,11 @@
         .timeline-item {
             position: relative;
             padding-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(4px);
         }
 
         .timeline-item::before {
@@ -1053,6 +1209,12 @@
             border-radius: 10px;
             padding: 18px;
             margin-bottom: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .profile-section:hover {
+            border-color: var(--success);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03), 0 6px 16px rgba(0,0,0,0.04);
         }
 
         .profile-section h4 {
@@ -1295,12 +1457,12 @@
 
     <div class="container">
 
-        <!-- HEADER (aparece em ambas as views) -->
-        <div class="header">
+        <!-- HEADER (dinâmico por aba) -->
+        <div class="header" id="main-header">
             <div class="header-content">
-                <span class="header-badge">Proposta Estratégica</span>
-                <h1>Social Selling no LinkedIn</h1>
-                <h2>CloudDog — Consultoria de Infraestrutura em Nuvem</h2>
+                <span class="header-badge" id="header-badge">Proposta Estratégica</span>
+                <h1 id="header-title">Social Selling no LinkedIn</h1>
+                <h2 id="header-subtitle">CloudDog — Consultoria de Infraestrutura em Nuvem</h2>
                 <div class="header-meta">
                     <span>Perfil: <strong>Tiago Pazzini</strong></span>
                     <span>Estratégia: <strong>Samuel Bruno</strong></span>
@@ -2061,8 +2223,7 @@
                     <pre id="prompt-text"></pre>
                     <div class="prompt-actions">
                         <button class="btn-copy" onclick="copyPrompt(this)" style="padding: 10px 18px; font-size: 0.85rem;">📋 Copiar Prompt</button>
-                        <a href="https://chatgpt.com/" target="_blank" class="btn-open-ai">🟢 Abrir ChatGPT</a>
-                        <a href="https://claude.ai/" target="_blank" class="btn-open-ai">🟣 Abrir Claude</a>
+                        <a href="https://gemini.google.com/" target="_blank" class="btn-open-ai">🔵 Abrir Gemini</a>
                     </div>
                 </div>
             </div>
@@ -2073,7 +2234,7 @@
                     <div class="step"><span class="step-dot">1</span><span>Preencha o formulário acima (quanto mais detalhes, melhor o resultado)</span></div>
                     <div class="step"><span class="step-dot">2</span><span>Clique em "Gerar Prompt"</span></div>
                     <div class="step"><span class="step-dot">3</span><span>Copie o prompt gerado</span></div>
-                    <div class="step"><span class="step-dot">4</span><span>Cole no ChatGPT ou Claude (botões ao lado)</span></div>
+                    <div class="step"><span class="step-dot">4</span><span>Cole no Gemini (botão ao lado)</span></div>
                     <div class="step"><span class="step-dot">5</span><span>Revise o post gerado, ajuste se necessário e publique!</span></div>
                 </div>
                 <p style="margin-top: 14px; font-size: 0.82rem; color: var(--text-muted);">💡 Dica: se o resultado não ficou 100%, peça para a IA "ajustar o gancho", "encurtar" ou "mudar o tom". Ela vai refinar.</p>
@@ -2111,13 +2272,118 @@
             }
         })();
 
-        // View switching
+        // View switching with dynamic header
+        const HEADER_CONFIG = {
+            apresentacao: {
+                badge: 'Proposta Estratégica',
+                title: 'Social Selling no LinkedIn',
+                subtitle: 'CloudDog — Consultoria de Infraestrutura em Nuvem',
+                gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)',
+                orb: 'rgba(249,115,22,0.12)'
+            },
+            operacional: {
+                badge: 'Guia Operacional',
+                title: 'Rotina & Execução',
+                subtitle: 'Calendário, tom de voz e estratégia de engajamento',
+                gradient: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+                orb: 'rgba(148,163,184,0.12)'
+            },
+            posts: {
+                badge: 'Banco de Conteúdo',
+                title: 'Posts Prontos',
+                subtitle: '16 posts para copiar e publicar no LinkedIn',
+                gradient: 'linear-gradient(135deg, #18212f 0%, #2d3a4f 100%)',
+                orb: 'rgba(249,115,22,0.1)'
+            },
+            templates: {
+                badge: 'Templates de Inbox',
+                title: 'Mensagens para Cada Etapa',
+                subtitle: 'Da conexão à reunião — modelos prontos para personalizar',
+                gradient: 'linear-gradient(135deg, #1a1f2e 0%, #2e3650 100%)',
+                orb: 'rgba(129,140,248,0.1)'
+            },
+            dashboard: {
+                badge: 'Acompanhamento',
+                title: 'Dashboard 90 Dias',
+                subtitle: 'Métricas, progresso e controle de publicações',
+                gradient: 'linear-gradient(135deg, #0f1a2e 0%, #1e3048 100%)',
+                orb: 'rgba(56,189,248,0.1)'
+            },
+            perfil: {
+                badge: 'Checklist',
+                title: 'Otimização do Perfil',
+                subtitle: 'Headline, banner, about e configurações do LinkedIn',
+                gradient: 'linear-gradient(135deg, #162032 0%, #253549 100%)',
+                orb: 'rgba(99,179,237,0.1)'
+            },
+            anotacoes: {
+                badge: 'Bloco Livre',
+                title: 'Anotações',
+                subtitle: 'Ideias, feedbacks, insights e observações',
+                gradient: 'linear-gradient(135deg, #1e293b 0%, #374151 100%)',
+                orb: 'rgba(148,163,184,0.08)'
+            },
+            gerarpost: {
+                badge: 'Assistente IA',
+                title: 'Gerador de Posts',
+                subtitle: 'Crie posts com ajuda do Gemini — rápido e no tom certo',
+                gradient: 'linear-gradient(135deg, #1c1917 0%, #3b2f2f 100%)',
+                orb: 'rgba(251,191,36,0.1)'
+            }
+        };
+
         function switchView(view) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('view-' + view).classList.add('active');
             event.target.classList.add('active');
+
+            // Update header
+            const config = HEADER_CONFIG[view];
+            if (config) {
+                const header = document.getElementById('main-header');
+                const badge = document.getElementById('header-badge');
+                const title = document.getElementById('header-title');
+                const subtitle = document.getElementById('header-subtitle');
+
+                header.style.background = config.gradient;
+                header.style.setProperty('--orb-color', config.orb);
+                badge.textContent = config.badge;
+                title.textContent = config.title;
+                subtitle.textContent = config.subtitle;
+
+                // Animate header content
+                badge.style.opacity = '0';
+                title.style.opacity = '0';
+                subtitle.style.opacity = '0';
+                badge.style.transform = 'translateY(-5px)';
+                title.style.transform = 'translateY(-5px)';
+                subtitle.style.transform = 'translateY(-5px)';
+
+                setTimeout(() => {
+                    badge.style.opacity = '1';
+                    badge.style.transform = 'translateY(0)';
+                }, 100);
+                setTimeout(() => {
+                    title.style.opacity = '1';
+                    title.style.transform = 'translateY(0)';
+                }, 200);
+                setTimeout(() => {
+                    subtitle.style.opacity = '1';
+                    subtitle.style.transform = 'translateY(0)';
+                }, 300);
+            }
         }
+
+        // Nav shadow on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.top-nav');
+            if (window.scrollY > 10) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
 
         // ===== POSTS SYSTEM =====
         const POSTS = [
