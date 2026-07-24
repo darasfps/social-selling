@@ -472,6 +472,104 @@
             .card { box-shadow: none; break-inside: avoid; }
         }
 
+        /* Gerar Post */
+        .gerar-form { display: flex; flex-direction: column; gap: 16px; }
+
+        .gerar-form label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .gerar-form select,
+        .gerar-form textarea,
+        .gerar-form input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            transition: border-color 0.2s;
+        }
+
+        .gerar-form select:focus,
+        .gerar-form textarea:focus,
+        .gerar-form input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .gerar-form textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+
+        .prompt-output {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .prompt-output.visible { display: block; }
+
+        .prompt-output pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .prompt-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-gerar {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            transition: all 0.2s;
+        }
+
+        .btn-gerar:hover { opacity: 0.85; }
+
+        .btn-open-ai {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-open-ai:hover { border-color: var(--accent); color: var(--accent); }
+
         /* Notes section */
         .notes-header {
             display: flex;
@@ -1186,6 +1284,7 @@
                 <button class="view-tab" onclick="switchView('dashboard')">Dashboard</button>
                 <button class="view-tab" onclick="switchView('perfil')">Perfil</button>
                 <button class="view-tab" onclick="switchView('anotacoes')">Anotações</button>
+                <button class="view-tab" onclick="switchView('gerarpost')">🤖 Gerar Post</button>
             </div>
             <button class="theme-toggle" onclick="toggleTheme()">
                 <span id="theme-icon">🌙</span>
@@ -1889,6 +1988,98 @@
 
         </div>
 
+        <!-- ===== VIEW: GERAR POST ===== -->
+        <div class="view" id="view-gerarpost">
+            <div class="card">
+                <div class="card-title"><span class="icon">🤖</span> Gerador de Prompt para Post</div>
+                <p style="margin-bottom: 8px;">Preencha o formulário abaixo. O sistema gera um prompt completo que você cola no <strong>ChatGPT</strong> ou <strong>Claude</strong> para criar o post.</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 20px;">O prompt já inclui todo o contexto (tom, regras, ICP, pilares) — o resultado será um post pronto para publicar.</p>
+
+                <div class="gerar-form">
+                    <div>
+                        <label for="gp-pilar">📌 Pilar de conteúdo</label>
+                        <select id="gp-pilar">
+                            <option value="">Escolha o pilar...</option>
+                            <option value="custos">💰 Redução de Custos em Nuvem (FinOps, otimização, desperdício)</option>
+                            <option value="migracao">🚀 Migração e Modernização (VMware→AWS, planejamento, lift-and-shift)</option>
+                            <option value="observabilidade">📊 Observabilidade e Gestão (Datadog, monitoramento, operação)</option>
+                            <option value="bastidores">🎯 Bastidores e Rotina (storytelling, aprendizados, dia a dia comercial)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="gp-dia">📅 Dia da semana</label>
+                        <select id="gp-dia">
+                            <option value="">Escolha o dia...</option>
+                            <option value="segunda">Segunda — Post educativo (texto longo ou carrossel)</option>
+                            <option value="quarta">Quarta — Dor/problema do ICP (texto com pergunta)</option>
+                            <option value="quinta">Quinta — Bastidor/insight pessoal (storytelling curto)</option>
+                            <option value="sexta">Sexta — Curadoria/dado de mercado (notícia + opinião)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="gp-publico">👥 Público principal deste post</label>
+                        <select id="gp-publico">
+                            <option value="">Escolha o público...</option>
+                            <option value="cto">CTO / Head de TI — dores: performance, modernização, segurança</option>
+                            <option value="gerente-cloud">Gerente de Cloud / Infraestrutura — dores: gestão, observabilidade</option>
+                            <option value="coord-ti">Coordenador de TI — dores: operação diária, migração, suporte</option>
+                            <option value="cfo">CFO / Gerente Financeiro — dores: custos, previsibilidade de gastos</option>
+                            <option value="todos">Todos os perfis acima</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="gp-tema">💡 Tema ou ideia específica (opcional)</label>
+                        <input type="text" id="gp-tema" placeholder="Ex: 'Empresas pagando por recursos que não usam', 'Minha experiência com um CTO essa semana'...">
+                    </div>
+
+                    <div>
+                        <label for="gp-contexto">📝 Contexto adicional (opcional)</label>
+                        <textarea id="gp-contexto" placeholder="Alguma situação real que aconteceu, dado que viu, conversa que teve, notícia do mercado... Quanto mais contexto, melhor o post."></textarea>
+                    </div>
+
+                    <div>
+                        <label for="gp-tom">🎨 Tom desejado</label>
+                        <select id="gp-tom">
+                            <option value="padrao">Padrão (consultivo + educativo)</option>
+                            <option value="provocativo">Provocativo (questionador, desafia o status quo)</option>
+                            <option value="storytelling">Storytelling (narrativa pessoal, humano)</option>
+                            <option value="dados">Baseado em dados (pesquisa, números, tendências)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-gerar" onclick="gerarPrompt()">🚀 Gerar Prompt</button>
+                </div>
+
+                <div class="prompt-output" id="prompt-output">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <strong style="font-size: 0.92rem; color: var(--text-primary);">✅ Prompt gerado!</strong>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Copie e cole na IA de sua preferência</span>
+                    </div>
+                    <pre id="prompt-text"></pre>
+                    <div class="prompt-actions">
+                        <button class="btn-copy" onclick="copyPrompt(this)" style="padding: 10px 18px; font-size: 0.85rem;">📋 Copiar Prompt</button>
+                        <a href="https://chatgpt.com/" target="_blank" class="btn-open-ai">🟢 Abrir ChatGPT</a>
+                        <a href="https://claude.ai/" target="_blank" class="btn-open-ai">🟣 Abrir Claude</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">📖</span> Como usar</div>
+                <div class="steps">
+                    <div class="step"><span class="step-dot">1</span><span>Preencha o formulário acima (quanto mais detalhes, melhor o resultado)</span></div>
+                    <div class="step"><span class="step-dot">2</span><span>Clique em "Gerar Prompt"</span></div>
+                    <div class="step"><span class="step-dot">3</span><span>Copie o prompt gerado</span></div>
+                    <div class="step"><span class="step-dot">4</span><span>Cole no ChatGPT ou Claude (botões ao lado)</span></div>
+                    <div class="step"><span class="step-dot">5</span><span>Revise o post gerado, ajuste se necessário e publique!</span></div>
+                </div>
+                <p style="margin-top: 14px; font-size: 0.82rem; color: var(--text-muted);">💡 Dica: se o resultado não ficou 100%, peça para a IA "ajustar o gancho", "encurtar" ou "mudar o tom". Ela vai refinar.</p>
+            </div>
+        </div>
+
         <!-- Footer -->
         <div class="footer">
             <p class="author">Samuel Bruno</p>
@@ -2341,6 +2532,124 @@
         }
 
         renderNotes();
+
+        // ===== GERAR POST =====
+        function gerarPrompt() {
+            const pilar = document.getElementById('gp-pilar').value;
+            const dia = document.getElementById('gp-dia').value;
+            const publico = document.getElementById('gp-publico').value;
+            const tema = document.getElementById('gp-tema').value.trim();
+            const contexto = document.getElementById('gp-contexto').value.trim();
+            const tom = document.getElementById('gp-tom').value;
+
+            if (!pilar || !dia) {
+                alert('Por favor, escolha pelo menos o pilar e o dia da semana.');
+                return;
+            }
+
+            const pilares = {
+                custos: 'Redução de Custos em Nuvem (FinOps, otimização, desperdício, billing, recursos ociosos)',
+                migracao: 'Migração e Modernização (VMware→AWS, planejamento, lift-and-shift vs. modernização, Broadcom)',
+                observabilidade: 'Observabilidade e Gestão de Nuvem (Datadog, monitoramento vs. observabilidade, operação 24x7)',
+                bastidores: 'Bastidores e Rotina Comercial (storytelling, aprendizados do dia a dia, humanização, Inside Sales)'
+            };
+
+            const dias = {
+                segunda: 'Segunda-feira — Post educativo (texto longo, denso em valor, pode ter lista)',
+                quarta: 'Quarta-feira — Post sobre dor/problema do ICP (texto que gera identificação, com pergunta no final)',
+                quinta: 'Quinta-feira — Bastidor/insight pessoal (storytelling curto, humano, vulnerável)',
+                sexta: 'Sexta-feira — Curadoria/dado de mercado (notícia ou pesquisa + opinião pessoal)'
+            };
+
+            const publicos = {
+                cto: 'CTO / Head de TI — preocupado com performance, modernização e segurança',
+                'gerente-cloud': 'Gerente de Cloud / Infraestrutura — preocupado com gestão do ambiente, observabilidade e disponibilidade',
+                'coord-ti': 'Coordenador de TI — preocupado com operação diária, migração e suporte',
+                cfo: 'CFO / Gerente Financeiro — preocupado com custos de nuvem descontrolados e previsibilidade de gastos',
+                todos: 'Todos: CTOs, Gerentes de Cloud, Coordenadores de TI e CFOs'
+            };
+
+            const tons = {
+                padrao: 'Consultivo e educativo — generoso, acessível, profissional',
+                provocativo: 'Provocativo — questiona o status quo, desafia suposições, instiga reflexão',
+                storytelling: 'Storytelling — narrativa pessoal, humano, vulnerável, conta uma história real',
+                dados: 'Baseado em dados — cita pesquisas, números e tendências para dar credibilidade'
+            };
+
+            let prompt = `Você é um especialista em Social Selling e criação de conteúdo para LinkedIn. Crie um post para o perfil de Tiago Pazzini, Inside Sales da CloudDog.
+
+## CONTEXTO DA EMPRESA
+CloudDog — consultoria de infraestrutura em nuvem com +10 anos de mercado, +400 projetos executados, 40 profissionais, 105 certificações AWS. Parceiros: AWS (principal), GCP, Azure (somente billing), Datadog (observabilidade).
+
+Soluções: Consultoria AWS, Migração para Nuvem (incluindo VMware→AWS), Gerenciamento de Nuvem (Managed Services 24x7), Prova de Conceito de IA Generativa (Amazon Bedrock), Pagamento de Nuvem em Boleto, Sophos MDR (segurança).
+
+## PERFIL DO AUTOR
+Tiago Pazzini — profissional comercial (Inside Sales). Não é técnico. Conversa com líderes de TI e financeiro diariamente, entende os desafios deles e conecta com soluções. O post é escrito em primeira pessoa (eu).
+
+## PEDIDO
+- Pilar: ${pilares[pilar]}
+- Dia/Formato: ${dias[dia]}
+- Público-alvo: ${publicos[publico] || 'Geral'}
+- Tom: ${tons[tom]}`;
+
+            if (tema) {
+                prompt += `\n- Tema/Ideia: ${tema}`;
+            }
+
+            if (contexto) {
+                prompt += `\n- Contexto adicional: ${contexto}`;
+            }
+
+            prompt += `
+
+## REGRAS OBRIGATÓRIAS
+
+### Estrutura
+- Gancho forte na primeira linha (curiosidade, dado impactante, provocação ou frase que para o scroll)
+- Parágrafos curtos (1-2 linhas) com espaçamento entre eles
+- Listas quando fizer sentido (3 itens é o ideal)
+- CTA suave no final — pergunta, convite para conversa no inbox, ou "comenta aqui"
+- Tamanho: 800 a 1500 caracteres
+
+### Tom e linguagem
+- Linguagem acessível — qualquer gestor deve entender, mesmo sem background técnico
+- Tom consultivo e generoso — "vou te ajudar a entender", nunca "compre meu serviço"
+- Profissional mas humano — pode usar storytelling, humor leve
+- Primeira pessoa (eu)
+
+### PROIBIDO
+- Mencionar a CloudDog diretamente como propaganda
+- Venda direta ou pitch
+- Jargões técnicos sem explicação
+- CTAs agressivos ("agende uma demo", "fale com nosso time")
+- Emojis em excesso
+- Posts genéricos sem valor real
+- Conteúdo polêmico ou político
+
+### PERMITIDO
+- Citar dados genéricos de cases ("ajudamos uma empresa do agro a reduzir 40% dos custos")
+- Mencionar tendências (VMware/Broadcom, FinOps, IA Generativa)
+- Usar dados de pesquisa (Gartner, Flexera, Forrester)
+- Contar histórias de conversas com líderes (sem citar nomes)
+
+## ENTREGA
+Entregue APENAS o texto do post, pronto para copiar e colar no LinkedIn. Sem explicações adicionais.`;
+
+            document.getElementById('prompt-text').textContent = prompt;
+            document.getElementById('prompt-output').classList.add('visible');
+
+            // Scroll to output
+            document.getElementById('prompt-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function copyPrompt(btn) {
+            const text = document.getElementById('prompt-text').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '✓ Copiado!';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '📋 Copiar Prompt'; btn.classList.remove('copied'); }, 2500);
+            });
+        }
     </script>
 
 </body>
