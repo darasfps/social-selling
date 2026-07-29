@@ -1,0 +1,2357 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estratégia Social Selling — CloudDog</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-nav: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --accent: #f97316;
+            --accent-light: rgba(249, 115, 22, 0.1);
+            --blue: #0ea5e9;
+            --blue-light: rgba(14, 165, 233, 0.08);
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --header-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-nav: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #334155;
+            --accent: #fb923c;
+            --accent-light: rgba(251, 146, 60, 0.15);
+            --blue: #38bdf8;
+            --blue-light: rgba(56, 189, 248, 0.1);
+            --success: #34d399;
+            --danger: #f87171;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --header-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Navigation */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-nav);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s, border 0.3s;
+        }
+
+        .nav-brand {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* View Tabs */
+        .view-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .view-tab {
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .view-tab.active {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(249,115,22,0.3);
+        }
+
+        .view-tab:hover:not(.active) {
+            color: var(--text-primary);
+            background: var(--border);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* Header */
+        .header {
+            background: var(--header-gradient);
+            padding: 48px 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header-content { position: relative; z-index: 1; }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(249,115,22,0.2);
+            color: var(--accent);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .header h2 {
+            color: #cbd5e1;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .header-meta {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-meta span {
+            color: #cbd5e1;
+            font-size: 0.82rem;
+        }
+
+        .header-meta span strong { color: #fff; }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: background 0.3s, border 0.3s;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title .icon {
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+        }
+
+        /* Grid layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+        /* Pillar cards */
+        .pillar {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            transition: border-color 0.2s, background 0.3s;
+            background: var(--bg-secondary);
+        }
+
+        .pillar:hover { border-color: var(--accent); }
+
+        .pillar h4 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .pillar .target {
+            font-size: 0.78rem;
+            color: var(--blue);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .pillar p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Calendar */
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .cal-item {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 14px 10px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .cal-item.post { border-color: var(--accent); }
+        .cal-item.engage { border-color: var(--blue); background: var(--blue-light); }
+
+        .cal-item .day {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .cal-item .type {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        .cal-item .format {
+            font-size: 0.68rem;
+            color: var(--accent);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* Tables */
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        thead { background: var(--bg-secondary); }
+
+        th {
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:hover td { background: var(--bg-secondary); }
+
+        /* Tags */
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+        .tag {
+            background: var(--bg-secondary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border: 1px solid var(--border);
+        }
+
+        /* Engage boxes */
+        .engage-box {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 18px;
+            border-left: 3px solid var(--blue);
+        }
+
+        .engage-box h4 {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .engage-box p {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+        }
+
+        /* Guidelines */
+        .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .do-box, .dont-box {
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+        .do-box {
+            background: rgba(16,185,129,0.05);
+            border: 1px solid rgba(16,185,129,0.2);
+        }
+
+        .dont-box {
+            background: rgba(239,68,68,0.04);
+            border: 1px solid rgba(239,68,68,0.15);
+        }
+
+        .do-box h4 { color: var(--success); font-size: 0.85rem; margin-bottom: 8px; }
+        .dont-box h4 { color: var(--danger); font-size: 0.85rem; margin-bottom: 8px; }
+
+        .rule-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rule-list li {
+            padding: 5px 0 5px 22px;
+            position: relative;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .rule-list.do li::before { content: '✓'; position: absolute; left: 0; color: var(--success); font-weight: 700; }
+        .rule-list.dont li::before { content: '✗'; position: absolute; left: 0; color: var(--danger); font-weight: 700; }
+
+        /* Steps */
+        .steps { display: flex; flex-direction: column; gap: 10px; }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-dot {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step span {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        .footer .author {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .do-dont { grid-template-columns: 1fr; }
+            .cal-grid { grid-template-columns: repeat(3, 1fr); }
+            .header h1 { font-size: 1.5rem; }
+            .header-meta { flex-direction: column; gap: 6px; }
+            .top-nav { padding: 10px 16px; }
+            .view-tabs { display: none; }
+        }
+
+        @media print {
+            body { background: #fff; }
+            .top-nav { display: none; }
+            .card { box-shadow: none; break-inside: avoid; }
+        }
+
+        /* Notes section */
+        .notes-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .notes-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-accent:hover { opacity: 0.85; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        .btn-danger {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+        }
+
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+
+        .note-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 14px;
+            transition: all 0.3s;
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .note-card-header .note-title {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--text-primary);
+        }
+
+        .note-card-header .note-date {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .note-card textarea {
+            width: 100%;
+            min-height: 80px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            resize: vertical;
+            transition: border-color 0.2s;
+            line-height: 1.6;
+        }
+
+        .note-card textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .note-card select {
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.78rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .saved-msg {
+            font-size: 0.72rem;
+            color: var(--success);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .saved-msg.show { opacity: 1; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state p { font-size: 0.9rem; margin-bottom: 16px; }
+
+        /* Checklist */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .check-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .check-item .check-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .check-item input:checked + .check-label {
+            color: var(--success);
+            text-decoration: line-through;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        .progress-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 32px;
+        }
+
+        /* Posts section */
+        .post-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .post-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .post-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .post-item-meta {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .post-item-meta .badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-week { background: var(--blue-light); color: var(--blue); }
+        .badge-pillar { background: var(--accent-light); color: var(--accent); }
+        .badge-day { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); }
+
+        .post-item-content {
+            white-space: pre-line;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-height: 150px;
+            overflow: hidden;
+            position: relative;
+            transition: max-height 0.3s;
+        }
+
+        .post-item-content.expanded {
+            max-height: none;
+        }
+
+        .post-item-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(transparent, var(--bg-secondary));
+        }
+
+        .post-item-content.expanded::after {
+            display: none;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-copy {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover { background: var(--accent); color: #fff; }
+        .btn-copy.copied { background: var(--success); border-color: var(--success); color: #fff; }
+
+        .btn-expand {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .btn-expand:hover { border-color: var(--text-secondary); color: var(--text-secondary); }
+
+        /* Templates section */
+        .template-stage {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 14px;
+        }
+
+        .template-stage-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .stage-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .template-stage-header h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .template-msg {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .template-msg p {
+            font-size: 0.82rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .template-msg .msg-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-style: normal;
+        }
+
+        .template-msg .btn-copy-sm {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 3px 8px;
+            font-size: 0.68rem;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .template-msg .btn-copy-sm:hover { border-color: var(--accent); color: var(--accent); }
+        .template-msg .btn-copy-sm.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+        /* Dashboard section */
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dash-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .dash-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 2px solid var(--bg-card);
+        }
+
+        .timeline-item.active::before { background: var(--accent); }
+        .timeline-item.done::before { background: var(--success); }
+
+        .timeline-item h4 {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .timeline-item p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Profile checklist */
+        .profile-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .profile-section h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .profile-section p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .profile-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+        }
+
+        .profile-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--success);
+            cursor: pointer;
+        }
+
+        .profile-check label {
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .profile-check input:checked + label {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        /* Responsive for new tabs */
+        @media (max-width: 768px) {
+            .dash-stats { grid-template-columns: repeat(2, 1fr); }
+            .view-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Metric inputs */
+        .stat-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-input-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-input-group input {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            transition: border-color 0.2s;
+        }
+
+        .stat-input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Post checklist in dashboard */
+        .dash-post-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .dash-post-row:last-child { border-bottom: none; }
+        .dash-post-row:hover { background: var(--bg-secondary); }
+
+        .dash-post-row.done {
+            border-left-color: var(--success);
+        }
+
+        .dash-post-row.late {
+            border-left-color: var(--danger);
+        }
+
+        .dash-post-row.upcoming {
+            border-left-color: var(--accent);
+        }
+
+        .dash-post-row.future {
+            border-left-color: transparent;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-dot.done { background: var(--success); }
+        .status-dot.late { background: var(--danger); }
+        .status-dot.upcoming { background: var(--accent); }
+        .status-dot.future { background: var(--border); }
+
+        .dash-post-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--success);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .dash-post-row .post-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dash-post-row .post-info .post-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dash-post-row .post-info .post-meta-sm {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .dash-post-row.done .post-name {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .dash-post-row input[type="date"] {
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            width: 130px;
+            flex-shrink: 0;
+        }
+
+        .dash-post-summary {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+
+        .dash-post-summary .summary-num {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--success);
+        }
+
+        .dash-post-summary .summary-text {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .dash-posts-list {
+            max-height: 240px;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .dash-posts-list.expanded {
+            max-height: none;
+        }
+
+        .btn-load-more {
+            width: 100%;
+            padding: 10px;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-load-more:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <span class="nav-brand">CloudDog — Social Selling</span>
+        <div class="nav-actions">
+            <div class="view-tabs">
+                <button class="view-tab active" onclick="switchView('apresentacao')">Apresentação</button>
+                <button class="view-tab" onclick="switchView('operacional')">Operacional</button>
+                <button class="view-tab" onclick="switchView('posts')">Posts</button>
+                <button class="view-tab" onclick="switchView('templates')">Inbox</button>
+                <button class="view-tab" onclick="switchView('dashboard')">Dashboard</button>
+                <button class="view-tab" onclick="switchView('perfil')">Perfil</button>
+                <button class="view-tab" onclick="switchView('anotacoes')">Anotações</button>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span>
+                <span id="theme-label">Noturno</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- HEADER (aparece em ambas as views) -->
+        <div class="header">
+            <div class="header-content">
+                <span class="header-badge">Proposta Estratégica</span>
+                <h1>Social Selling no LinkedIn</h1>
+                <h2>CloudDog — Consultoria de Infraestrutura em Nuvem</h2>
+                <div class="header-meta">
+                    <span>Perfil: <strong>Tiago Pazzini</strong></span>
+                    <span>Estratégia: <strong>Samuel Bruno</strong></span>
+                    <span>Data: <strong>Julho/2026</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VIEW: APRESENTAÇÃO ===== -->
+        <div class="view active" id="view-apresentacao">
+
+            <div class="card">
+                <div class="card-title"><span class="icon">💡</span> Por que Social Selling?</div>
+                <p><strong>O que é:</strong> Social Selling é o uso estratégico das redes sociais para encontrar, conectar e nutrir potenciais clientes. Em vez de perseguir leads com cold calls e e-mails frios, você atrai as pessoas certas através de conteúdo relevante e relacionamento.</p>
+                <p style="margin-top: 10px;"><strong>Por que funciona no LinkedIn:</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px; color: var(--text-secondary); font-size: 0.88rem; line-height: 2;">
+                    <li>93% dos compradores B2B iniciam o processo de compra com uma busca online</li>
+                    <li>75% dos compradores B2B usam redes sociais para tomar decisões</li>
+                    <li>Vendedores que usam Social Selling fecham 40-50% mais negócios que os que não usam</li>
+                    <li>O LinkedIn é a rede nº1 para decisores de TI — CTOs, gerentes e diretores estão ativos aqui</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Por que agora:</strong> A CloudDog tem +400 projetos entregues, 105 certificações AWS e soluções que resolvem dores reais. O que falta é <strong>visibilidade</strong> para as pessoas certas. Social Selling resolve isso sem investimento em mídia paga.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🎯</span> Objetivo da Estratégia</div>
+                <p>Utilizar o perfil pessoal de <strong>Tiago Pazzini</strong> no LinkedIn como um canal de geração de leads orgânico para a CloudDog.</p>
+                <div style="margin-top: 14px; padding: 16px; background: var(--bg-secondary); border-radius: 10px; border-left: 3px solid var(--accent);">
+                    <p style="font-size: 0.85rem; color: var(--text-primary); font-weight: 500; margin: 0;">O funil funciona assim:</p>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 8px 0 0 0;">
+                        Conteúdo educativo → Gera visibilidade → Atrai o ICP → Gera engajamento → Abre relacionamento → Cria oportunidade comercial
+                    </p>
+                </div>
+                <p style="margin-top: 14px;"><strong>O que isso NÃO é:</strong></p>
+                <ul style="margin: 6px 0; padding-left: 20px; color: var(--text-secondary); font-size: 0.85rem; line-height: 2;">
+                    <li>Não é propaganda da CloudDog no feed</li>
+                    <li>Não é spam no inbox das pessoas</li>
+                    <li>Não é marketing de conteúdo genérico</li>
+                </ul>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);"><strong>É:</strong> posicionamento estratégico + entrega de valor + relacionamento genuíno que, naturalmente, gera oportunidades de negócio.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🤔</span> Por que o Perfil Pessoal (e não o da empresa)?</div>
+                <p>Páginas de empresa no LinkedIn têm alcance orgânico muito baixo (~2-5% dos seguidores). Perfis pessoais alcançam 5 a 10x mais.</p>
+                <p style="margin-top: 10px;">Além disso:</p>
+                <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-secondary); font-size: 0.88rem; line-height: 2;">
+                    <li><strong>Pessoas compram de pessoas</strong> — um rosto gera mais confiança que um logo</li>
+                    <li><strong>O algoritmo favorece perfis pessoais</strong> — entrega mais no feed</li>
+                    <li><strong>Conversas acontecem entre pessoas</strong> — ninguém manda mensagem para uma empresa</li>
+                    <li><strong>Tiago já é o ponto de contato comercial</strong> — faz sentido ele ser a face</li>
+                </ul>
+                <p style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);">A CloudDog se beneficia sem se expor. Se algo não performar, não há risco para a marca.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">👥</span> Para Quem Falamos (ICP)</div>
+                <p>ICP = Ideal Customer Profile. São as pessoas que tomam ou influenciam decisões de compra de infraestrutura em nuvem:</p>
+                <div class="table-wrap" style="margin-top: 12px;">
+                    <table>
+                        <thead>
+                            <tr><th>Cargo</th><th>Área</th><th>Dor Principal</th><th>Por que nos interessa</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>CTO / Head de TI</td><td>Tecnologia</td><td>Performance, modernização, segurança</td><td>Decide investimentos em infra</td></tr>
+                            <tr><td>Gerente de Cloud / Infra</td><td>TI</td><td>Gestão, observabilidade, disponibilidade</td><td>Influencia e executa decisões</td></tr>
+                            <tr><td>Coordenador de TI</td><td>Tecnologia</td><td>Operação diária, migração, suporte</td><td>Sente a dor no dia a dia e escala</td></tr>
+                            <tr><td>CFO / Gerente Financeiro</td><td>Financeiro</td><td>Custos com nuvem, previsibilidade</td><td>Aprova budgets e busca economia</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top: 12px; font-size: 0.82rem; color: var(--text-muted);">O conteúdo é feito para que essas pessoas leiam e pensem: "Esse cara entende meu problema".</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🧠</span> Posicionamento do Tiago</div>
+                <p>O Tiago <strong>não</strong> será posicionado como vendedor. Será posicionado como:</p>
+                <div style="margin: 14px 0; padding: 16px; background: var(--bg-secondary); border-radius: 10px; text-align: center;">
+                    <p style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin: 0; font-style: italic;">"Um profissional que entende os desafios de infraestrutura em nuvem e ajuda líderes de TI a tomarem melhores decisões."</p>
+                </div>
+                <p><strong>Na prática isso significa:</strong></p>
+                <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-secondary); font-size: 0.88rem; line-height: 2;">
+                    <li>Ele compartilha conhecimento (educativo, não técnico demais)</li>
+                    <li>Ele mostra que conversa com líderes todos os dias (credibilidade)</li>
+                    <li>Ele é acessível — "me chama no inbox" em vez de "agende uma demo"</li>
+                    <li>A CloudDog aparece como contexto natural, nunca como anúncio</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">📌</span> Pilares de Conteúdo</div>
+                <p>O conteúdo é dividido em 5 eixos que se alternam. Cada um atrai uma parcela do ICP e mantém o feed variado:</p>
+                <div class="grid-2" style="margin-top: 14px;">
+                    <div class="pillar">
+                        <h4>💰 Redução de Custos</h4>
+                        <div class="target">Foco: CFOs, Gestores Financeiros</div>
+                        <p>"Sua empresa está pagando por cloud que não usa?"</p>
+                        <p style="font-style: normal; margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);">Por quê: custos é a dor nº1 de quem já está na nuvem. Atrai quem segura o orçamento.</p>
+                    </div>
+                    <div class="pillar">
+                        <h4>🚀 Migração e Modernização</h4>
+                        <div class="target">Foco: CTOs, Heads de TI</div>
+                        <p>"Migrar não é só levantar e mover"</p>
+                        <p style="font-style: normal; margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);">Por quê: VMware/Broadcom criou urgência. Empresas precisam migrar e não sabem por onde começar.</p>
+                    </div>
+                    <div class="pillar">
+                        <h4>📊 Observabilidade e Gestão</h4>
+                        <div class="target">Foco: Gerentes de Cloud/Infra</div>
+                        <p>"Monitorar ≠ observar"</p>
+                        <p style="font-style: normal; margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);">Por quê: conecta com a solução Datadog da CloudDog. Gera autoridade técnica indireta.</p>
+                    </div>
+                    <div class="pillar">
+                        <h4>🎯 Bastidores e Rotina</h4>
+                        <div class="target">Foco: Humanização e conexão</div>
+                        <p>"O que aprendi com 50 líderes de TI"</p>
+                        <p style="font-style: normal; margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);">Por quê: pessoas conectam com pessoas. Storytelling gera confiança e identificação.</p>
+                    </div>
+                    <div class="pillar">
+                        <h4>💻 Produtividade e Colaboração</h4>
+                        <div class="target">Foco: Gestores de TI, Coordenadores</div>
+                        <p>"Licenciamento inteligente é investimento, não custo"</p>
+                        <p style="font-style: normal; margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);">Por quê: Workspace e O365 são universais. Atrai decisores que buscam produtividade e controle de licenças.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🔥</span> Temas Quentes do Mercado</div>
+                <p>Assuntos com alta relevância agora — geram engajamento porque o mercado está falando sobre eles:</p>
+                <div class="tags" style="margin-top: 12px;">
+                    <span class="tag">VMware/Broadcom → AWS</span>
+                    <span class="tag">FinOps</span>
+                    <span class="tag">Governança de Custos</span>
+                    <span class="tag">IA Generativa (Bedrock)</span>
+                    <span class="tag">Segurança Multi-cloud</span>
+                    <span class="tag">Observabilidade</span>
+                    <span class="tag">Well-Architected</span>
+                    <span class="tag">Disaster Recovery</span>
+                    <span class="tag">Google Workspace</span>
+                    <span class="tag">Microsoft 365</span>
+                    <span class="tag">Produtividade e Licenças</span>
+                </div>
+                <p style="margin-top: 12px; font-size: 0.82rem; color: var(--text-muted);">Esses temas são "ganchos" que conectam com as soluções da CloudDog sem vender diretamente. Ex: falar sobre VMware/Broadcom atrai quem precisa migrar — que é exatamente um serviço da CloudDog.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">⚡</span> O que o Tiago Precisa Fazer</div>
+                <p>O investimento de tempo é baixo. A produção de conteúdo fica com o Samuel:</p>
+                <div class="table-wrap" style="margin-top: 12px;">
+                    <table>
+                        <thead>
+                            <tr><th>Atividade</th><th>Tempo</th><th>Frequência</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Engajamento no feed (curtir + comentar)</td><td>15-20 min</td><td>Diário</td></tr>
+                            <tr><td>Revisar e publicar o post</td><td>5 min</td><td>3-4x/semana</td></tr>
+                            <tr><td>Enviar conexões para ICP</td><td>5-10 min</td><td>Diário</td></tr>
+                            <tr><td>Responder inbox</td><td>10-15 min</td><td>2-3x/semana</td></tr>
+                            <tr><td>Check-in com Samuel</td><td>10-15 min</td><td>Semanal</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top: 12px; font-size: 0.85rem; color: var(--text-secondary);"><strong>Total: ~25-35 minutos por dia.</strong> Menos que o tempo de um café.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">📈</span> Resultados Esperados (90 dias)</div>
+                <p>Metas realistas baseadas em benchmarks de Social Selling B2B:</p>
+                <div class="table-wrap" style="margin-top: 12px;">
+                    <table>
+                        <thead>
+                            <tr><th>Métrica</th><th>Meta 30 dias</th><th>Meta 60 dias</th><th>Meta 90 dias</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Impressões médias/post</td><td>>500</td><td>>1.000</td><td>>1.500</td></tr>
+                            <tr><td>Conexões ICP aceitas</td><td>50+</td><td>100+</td><td>150+</td></tr>
+                            <tr><td>Conversas no inbox</td><td>5-10</td><td>15-25</td><td>25-35</td></tr>
+                            <tr><td>Reuniões agendadas</td><td>0-1</td><td>2-3</td><td><strong>5+</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top: 12px; font-size: 0.82rem; color: var(--text-muted);">Resultados reais começam a aparecer a partir do mês 2. O mês 1 é construção de base e autoridade.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🛡️</span> Riscos e Proteções</div>
+                <div class="grid-2" style="margin-top: 10px;">
+                    <div style="padding: 14px; background: var(--bg-secondary); border-radius: 8px;">
+                        <p style="font-weight: 600; font-size: 0.85rem; color: var(--text-primary); margin-bottom: 6px;">E se não funcionar?</p>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Zero investimento financeiro. O único custo é tempo (25 min/dia). Se em 60 dias não houver tração, ajustamos a estratégia com dados concretos.</p>
+                    </div>
+                    <div style="padding: 14px; background: var(--bg-secondary); border-radius: 8px;">
+                        <p style="font-weight: 600; font-size: 0.85rem; color: var(--text-primary); margin-bottom: 6px;">E a imagem da empresa?</p>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">O conteúdo é educativo e profissional. Não menciona a CloudDog como propaganda. Se algo não ficar bom, é revisado antes de postar. Zero risco.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🚦</span> Próximos Passos</div>
+                <p style="margin-bottom: 14px;">Após a aprovação, a execução começa em menos de 1 semana:</p>
+                <div class="steps">
+                    <div class="step"><span class="step-dot">1</span><span>Aprovação desta estratégia</span></div>
+                    <div class="step"><span class="step-dot">2</span><span>Otimização do perfil LinkedIn (headline, banner, resumo) — 1-2 dias</span></div>
+                    <div class="step"><span class="step-dot">3</span><span>Publicação do primeiro post — semana 1</span></div>
+                    <div class="step"><span class="step-dot">4</span><span>Cadência completa ativa — a partir da semana 2</span></div>
+                    <div class="step"><span class="step-dot">5</span><span>Primeira análise de métricas — dia 30</span></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== VIEW: OPERACIONAL ===== -->
+        <div class="view" id="view-operacional">
+
+            <div class="card">
+                <div class="card-title"><span class="icon">📅</span> Calendário Semanal</div>
+                <p>Frequência de 3 a 4 posts/semana + 1 dia exclusivo de engajamento:</p>
+                <div class="cal-grid" style="margin-top: 14px;">
+                    <div class="cal-item post">
+                        <div class="day">Seg</div>
+                        <div class="type">Post educativo (pilar rotativo)</div>
+                        <div class="format">Texto longo / Carrossel</div>
+                    </div>
+                    <div class="cal-item engage">
+                        <div class="day">Ter</div>
+                        <div class="type">Engajamento ativo</div>
+                        <div class="format">Conexões / Comentários</div>
+                    </div>
+                    <div class="cal-item post">
+                        <div class="day">Qua</div>
+                        <div class="type">Dor / Problema do ICP</div>
+                        <div class="format">Texto + pergunta</div>
+                    </div>
+                    <div class="cal-item post">
+                        <div class="day">Qui</div>
+                        <div class="type">Bastidor / Insight</div>
+                        <div class="format">Storytelling curto</div>
+                    </div>
+                    <div class="cal-item">
+                        <div class="day">Sex</div>
+                        <div class="type">Curadoria (opcional)</div>
+                        <div class="format">Notícia + opinião</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">✍️</span> Diretrizes de Tom e Linguagem</div>
+                <div class="do-dont">
+                    <div class="do-box">
+                        <h4>✅ Fazer</h4>
+                        <ul class="rule-list do">
+                            <li>Linguagem acessível — qualquer gestor entende</li>
+                            <li>Tom consultivo — "vou te ajudar a entender"</li>
+                            <li>Profissional mas humano — histórias, humor leve</li>
+                            <li>CTAs suaves — "comenta aqui", "me chama no inbox"</li>
+                        </ul>
+                    </div>
+                    <div class="dont-box">
+                        <h4>❌ Evitar</h4>
+                        <ul class="rule-list dont">
+                            <li>Jargões técnicos sem explicação</li>
+                            <li>Posts polêmicos ou políticos</li>
+                            <li>Venda direta ou spam no feed</li>
+                            <li>Conteúdo que comprometa a imagem da empresa</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🤝</span> Estratégia de Engajamento</div>
+                <div class="grid-3" style="margin-top: 12px;">
+                    <div class="engage-box">
+                        <h4>🔗 Conexões</h4>
+                        <p>5 a 10/dia para perfis do ICP. Nota personalizada, curta, sem pitch.</p>
+                    </div>
+                    <div class="engage-box">
+                        <h4>💬 Comentários</h4>
+                        <p>Opinião ou complemento real em posts de decisores. Nunca genérico.</p>
+                    </div>
+                    <div class="engage-box">
+                        <h4>📩 Inbox</h4>
+                        <p>Após interação no feed, abrir conversa com curiosidade. Nunca pitch.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">📊</span> Métricas Detalhadas</div>
+                <p>Indicadores monitorados para medir sucesso:</p>
+                <div class="table-wrap" style="margin-top: 12px;">
+                    <table>
+                        <thead>
+                            <tr><th>Métrica</th><th>O que mede</th><th>Frequência</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Impressões por post</td><td>Alcance do conteúdo</td><td>Semanal</td></tr>
+                            <tr><td>Curtidas / Reações</td><td>Engajamento passivo</td><td>Semanal</td></tr>
+                            <tr><td>Comentários</td><td>Engajamento real</td><td>Semanal</td></tr>
+                            <tr><td>Compartilhamentos</td><td>Viralização</td><td>Semanal</td></tr>
+                            <tr><td>Cliques no perfil</td><td>Curiosidade gerada</td><td>Semanal</td></tr>
+                            <tr><td>Novas conexões ICP</td><td>Crescimento qualificado</td><td>Semanal</td></tr>
+                            <tr><td>Mensagens recebidas</td><td>Intenção de compra</td><td>Semanal</td></tr>
+                            <tr><td>Taxa de aceite</td><td>Relevância da abordagem</td><td>Mensal</td></tr>
+                            <tr><td>Reuniões agendadas</td><td>Conversão final</td><td>Mensal</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">💡</span> Modelo de Nota para Conexão</div>
+                <p style="background: var(--bg-secondary); padding: 14px; border-radius: 8px; border-left: 3px solid var(--accent); font-style: italic; font-size: 0.88rem;">
+                    "Oi [Nome], vi que você atua com infraestrutura em [empresa]. Acompanho bastante o setor de cloud e achei que faria sentido nos conectarmos. Abs!"
+                </p>
+                <p style="margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">Curta, sem pitch, genuína. Adaptar conforme o perfil.</p>
+            </div>
+
+        </div>
+
+        <!-- ===== VIEW: POSTS ===== -->
+        <div class="view" id="view-posts">
+            <div class="card">
+                <div class="card-title"><span class="icon">📄</span> Banco de Posts</div>
+                <p>16 posts prontos para copiar e publicar. Clique em "Copiar" para enviar direto ao LinkedIn.</p>
+
+                <div class="post-filters" style="margin-top: 14px;">
+                    <button class="filter-btn active" onclick="filterPosts('all')">Todos</button>
+                    <button class="filter-btn" onclick="filterPosts('semana1')">Semana 1</button>
+                    <button class="filter-btn" onclick="filterPosts('semana2')">Semana 2</button>
+                    <button class="filter-btn" onclick="filterPosts('semana3')">Semana 3</button>
+                    <button class="filter-btn" onclick="filterPosts('semana4')">Semana 4</button>
+                    <button class="filter-btn" onclick="filterPosts('custos')">💰 Custos</button>
+                    <button class="filter-btn" onclick="filterPosts('migracao')">🚀 Migração</button>
+                    <button class="filter-btn" onclick="filterPosts('observabilidade')">📊 Observabilidade</button>
+                    <button class="filter-btn" onclick="filterPosts('bastidores')">🎯 Bastidores</button>
+                    <button class="filter-btn" onclick="filterPosts('produtividade')">💻 Produtividade</button>
+                </div>
+
+                <div id="posts-container"></div>
+            </div>
+        </div>
+
+        <!-- ===== VIEW: TEMPLATES ===== -->
+        <div class="view" id="view-templates">
+            <div class="card">
+                <div class="card-title"><span class="icon">📩</span> Templates de Inbox</div>
+                <p>Modelos de mensagem para cada etapa do relacionamento. Copie, personalize e envie.</p>
+
+                <div class="template-stage" style="margin-top: 16px;">
+                    <div class="template-stage-header">
+                        <span class="stage-num">1</span>
+                        <h4>Nota de Conexão (ao enviar convite)</h4>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Abordagem ativa</p>
+                        <p>Oi [Nome], vi que você atua com [infraestrutura/TI/cloud] na [Empresa]. Acompanho bastante o setor e achei que faria sentido nos conectarmos. Abs!</p>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Após interação no post</p>
+                        <p>Oi [Nome], vi que você curtiu/comentou meu post sobre [tema]. Fico feliz que fez sentido. Vamos nos conectar?</p>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Grupo/evento em comum</p>
+                        <p>Oi [Nome], vi que a gente participa do [grupo/evento]. Sou do mercado de cloud e gosto de trocar ideia com quem está no setor. Bora conectar?</p>
+                    </div>
+                </div>
+
+                <div class="template-stage">
+                    <div class="template-stage-header">
+                        <span class="stage-num">2</span>
+                        <h4>Primeira Mensagem Após Aceite (esperar 1-2 dias)</h4>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Curiosidade genuína</p>
+                        <p>[Nome], valeu por aceitar! Vi que você está na [Empresa] há [X tempo]. Como está o cenário de infra por aí? Tenho visto muita empresa repensando a estratégia de nuvem esse ano. Fica à vontade se quiser trocar uma ideia sobre o assunto em algum momento.</p>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Comentário sobre o perfil</p>
+                        <p>[Nome], obrigado pela conexão! Vi no seu perfil que vocês trabalham com [algo que viu]. Sempre me interessa entender como empresas do [segmento] estão lidando com a operação de cloud. Se em algum momento quiser trocar uma ideia, estou por aqui.</p>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Referência a conteúdo</p>
+                        <p>[Nome], valeu por conectar! Se tiver interesse, volta e meia posto conteúdo sobre [tema]. Qualquer dúvida ou assunto que queira explorar, é só chamar. Abs!</p>
+                    </div>
+                </div>
+
+                <div class="template-stage">
+                    <div class="template-stage-header">
+                        <span class="stage-num">3</span>
+                        <h4>Follow-up de Engajamento (após interação no feed)</h4>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Após comentário relevante</p>
+                        <p>[Nome], curti muito seu comentário no post sobre [tema]. Você mencionou [algo que a pessoa disse]. Isso é algo que vocês estão passando na [Empresa] agora? Pergunto porque é uma situação que vejo bastante e sempre gosto de entender como cada empresa lida.</p>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Curtida recorrente</p>
+                        <p>[Nome], percebi que você tem acompanhado meus posts sobre [tema]. Fico feliz que está fazendo sentido! Tem algum tema específico que gostaria que eu abordasse? E se quiser trocar uma ideia sobre a realidade aí na [Empresa], estou disponível.</p>
+                    </div>
+                </div>
+
+                <div class="template-stage">
+                    <div class="template-stage-header">
+                        <span class="stage-num">4</span>
+                        <h4>Transição para Conversa (interesse claro)</h4>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Propor conversa casual</p>
+                        <p>[Nome], pelo que você comentou, parece que [situação/dor] é um desafio real aí. Se fizer sentido, posso te contar como outras empresas do [segmento/porte] estão resolvendo isso. Sem compromisso — 15 minutos de conversa. O que acha?</p>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Oferecer diagnóstico</p>
+                        <p>[Nome], baseado no que você falou, acho que faria sentido vocês entenderem onde estão os principais pontos de otimização no ambiente. A gente faz um diagnóstico rápido — sem custo e sem compromisso. Geralmente em 1 semana vocês já têm um mapa claro. Quer que eu te explique como funciona?</p>
+                    </div>
+                </div>
+
+                <div class="template-stage">
+                    <div class="template-stage-header">
+                        <span class="stage-num">5</span>
+                        <h4>Reativação (conexões frias)</h4>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Reativação leve</p>
+                        <p>[Nome], tudo bem? Faz um tempo que nos conectamos e queria saber: como está o cenário de [cloud/infra/TI] aí na [Empresa]? Alguma novidade ou desafio que posso ajudar?</p>
+                    </div>
+                    <div class="template-msg">
+                        <button class="btn-copy-sm" onclick="copyTemplate(this)">Copiar</button>
+                        <p class="msg-label">Compartilhar valor</p>
+                        <p>[Nome], lembrei de você quando vi esse dado: [insight ou estatística relevante]. Achei que poderia ser útil para a realidade aí. Qualquer coisa, estou por aqui.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VIEW: DASHBOARD ===== -->
+        <div class="view" id="view-dashboard">
+            <div class="card">
+                <div class="card-title"><span class="icon">📈</span> Dashboard — 90 Dias</div>
+
+                <div style="margin-bottom: 20px; padding: 16px; background: var(--bg-secondary); border-radius: 10px; border: 1px solid var(--border);">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">📅 Data de início do projeto:</label>
+                    <input type="date" id="dash-start-date" onchange="saveDashDate(this.value)" style="padding:8px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.85rem; background:var(--bg-card); color:var(--text-primary); margin-left: 10px; margin-top: 6px;">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Defina a data que o projeto começou/vai começar. O dashboard calcula tudo automaticamente.</p>
+                </div>
+
+                <div class="dash-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="dash-day">—</div>
+                        <div class="stat-label">Dia Atual</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="dash-week">—</div>
+                        <div class="stat-label">Semana</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="dash-month">—</div>
+                        <div class="stat-label">Mês</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="dash-progress">0%</div>
+                        <div class="stat-label">Progresso</div>
+                    </div>
+                </div>
+
+                <div style="margin: 16px 0;">
+                    <div class="progress-track" style="height: 10px; border-radius: 5px;">
+                        <div class="progress-fill" id="dash-bar" style="width: 0%; background: var(--accent); height: 100%; border-radius: 5px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">✅</span> Controle de Publicações</div>
+                <p style="margin-bottom: 14px;">Marque os posts conforme for publicando. Adicione a data real de publicação.</p>
+                <div id="dash-posts-checklist"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">📊</span> Métricas Semanais</div>
+                <p style="margin-bottom: 14px;">Preencha os números de cada semana. Navegue entre semanas para ver o histórico.</p>
+
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <button class="btn-expand" onclick="changeMetricWeek(-1)">◂ Anterior</button>
+                    <span style="font-size: 1rem; font-weight: 700; color: var(--accent);" id="metric-week-display">Semana 1</span>
+                    <button class="btn-expand" onclick="changeMetricWeek(1)">Próxima ▸</button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" id="dash-metrics">
+                    <div class="stat-input-group">
+                        <label>Conexões enviadas</label>
+                        <input type="number" id="metric-conexoes" onchange="saveMetrics()" placeholder="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <label>Conexões aceitas</label>
+                        <input type="number" id="metric-aceitas" onchange="saveMetrics()" placeholder="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <label>Impressões médias/post</label>
+                        <input type="number" id="metric-impressoes" onchange="saveMetrics()" placeholder="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <label>Comentários totais</label>
+                        <input type="number" id="metric-comentarios" onchange="saveMetrics()" placeholder="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <label>Mensagens inbox enviadas</label>
+                        <input type="number" id="metric-inbox-env" onchange="saveMetrics()" placeholder="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <label>Respostas recebidas</label>
+                        <input type="number" id="metric-respostas" onchange="saveMetrics()" placeholder="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <label>Reuniões agendadas</label>
+                        <input type="number" id="metric-reunioes" onchange="saveMetrics()" placeholder="0">
+                    </div>
+                    <div class="stat-input-group">
+                        <label>Curtidas/Reações totais</label>
+                        <input type="number" id="metric-curtidas" onchange="saveMetrics()" placeholder="0">
+                    </div>
+                </div>
+
+                <div id="metrics-history" style="margin-top: 20px;"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🗺️</span> Timeline dos 90 Dias</div>
+                <div class="dash-timeline" id="dash-timeline">
+                    <div class="timeline-item">
+                        <h4>Mês 1 — Fundação (Dias 1-30)</h4>
+                        <p>Perfil otimizado, primeiros posts, 150-200 conexões enviadas, impressões >500/post</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Mês 2 — Tração (Dias 31-60)</h4>
+                        <p>Engajamento cresce, 30-40 mensagens inbox, 10-15 conversas abertas, impressões >1000/post</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Mês 3 — Conversão (Dias 61-90)</h4>
+                        <p>5+ reuniões agendadas, 150+ conexões ICP, pipeline alimentado</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🚨</span> Indicadores de Alerta</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Sinal</th><th>Ação</th></tr></thead>
+                        <tbody>
+                            <tr><td>Impressões &lt; 300 após semana 2</td><td>Revisar horários e ganchos</td></tr>
+                            <tr><td>Taxa aceite &lt; 20%</td><td>Revisar nota de conexão e headline</td></tr>
+                            <tr><td>0 comentários em 3 posts seguidos</td><td>Mudar abordagem do conteúdo</td></tr>
+                            <tr><td>Inbox sem respostas após 15 msgs</td><td>Revisar templates e timing</td></tr>
+                            <tr><td>Nenhuma reunião até dia 75</td><td>Ser mais direto, oferecer diagnósticos</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VIEW: PERFIL ===== -->
+        <div class="view" id="view-perfil">
+            <div class="card">
+                <div class="card-title"><span class="icon">👤</span> Otimização do Perfil — Checklist</div>
+                <p>Marque cada item conforme for implementando. O progresso salva automaticamente.</p>
+                <div style="margin: 12px 0;">
+                    <div class="progress-bar">
+                        <div class="progress-track">
+                            <div class="progress-fill" id="profile-bar" style="width: 0%; background: var(--success);"></div>
+                        </div>
+                        <span class="progress-label" id="profile-pct">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="profile-section">
+                    <h4>📝 Headline</h4>
+                    <p>Comunicar valor, não cargo. Ex: "Ajudo empresas a reduzirem custos em nuvem | CloudDog"</p>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-headline" onchange="saveProfile()">
+                        <label for="pf-headline">Headline atualizada com proposta de valor</label>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>📸 Foto de Perfil</h4>
+                    <p>Profissional, fundo neutro, sorriso leve, boa iluminação, do peito para cima</p>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-foto" onchange="saveProfile()">
+                        <label for="pf-foto">Foto profissional atualizada</label>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>🖼️ Banner</h4>
+                    <p>1584x396px, cores da CloudDog, texto com proposta de valor + logo discreto</p>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-banner" onchange="saveProfile()">
+                        <label for="pf-banner">Banner personalizado criado e aplicado</label>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>📄 Resumo (About)</h4>
+                    <p>Primeira pessoa, 3 primeiras linhas fortes, palavras-chave, CTA no final</p>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-about" onchange="saveProfile()">
+                        <label for="pf-about">Resumo reescrito no tom consultivo</label>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>💼 Experiência</h4>
+                    <p>Título contextualizado + descrição com bullet points do que faz na prática</p>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-exp" onchange="saveProfile()">
+                        <label for="pf-exp">Experiência atualizada com contexto e valor</label>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>⭐ Destaques (Featured)</h4>
+                    <p>Post que performou bem + link para case/site + conteúdo educativo</p>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-featured" onchange="saveProfile()">
+                        <label for="pf-featured">Seção de destaques configurada</label>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>🏷️ Competências</h4>
+                    <p>Cloud Computing, AWS, Consultoria TI, Vendas Consultivas, FinOps, Migração</p>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-skills" onchange="saveProfile()">
+                        <label for="pf-skills">Competências relevantes adicionadas</label>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>⚙️ Configurações</h4>
+                    <p>Modo criador ativo, URL personalizada, hashtags configuradas, contato visível</p>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-config-criador" onchange="saveProfile()">
+                        <label for="pf-config-criador">Modo criador ativado</label>
+                    </div>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-config-url" onchange="saveProfile()">
+                        <label for="pf-config-url">URL personalizada</label>
+                    </div>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-config-hashtags" onchange="saveProfile()">
+                        <label for="pf-config-hashtags">Hashtags do modo criador configuradas</label>
+                    </div>
+                    <div class="profile-check">
+                        <input type="checkbox" id="pf-config-contato" onchange="saveProfile()">
+                        <label for="pf-config-contato">E-mail de contato visível</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VIEW: ANOTAÇÕES ===== -->
+        <div class="view" id="view-anotacoes">
+
+            <div class="card">
+                <div class="notes-header">
+                    <h3>📝 Anotações Rápidas</h3>
+                    <button class="btn btn-accent" onclick="addNote()">+ Nova</button>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+                    Bloco livre para ideias, feedbacks, insights ou qualquer observação. Salva automaticamente.
+                </p>
+                <div id="notes-container">
+                    <div class="empty-state" id="empty-notes">
+                        <p>Nenhuma anotação ainda.</p>
+                        <button class="btn btn-outline" onclick="addNote()">Criar primeira anotação</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="author">Samuel Bruno</p>
+            <p style="color: var(--text-muted);">Comunicação & Marketing | Estratégia de Social Selling</p>
+            <p style="margin-top: 12px; font-size: 0.78rem;">Julho/2026</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+            document.getElementById('theme-label').textContent = next === 'dark' ? 'Claro' : 'Noturno';
+            localStorage.setItem('theme', next);
+        }
+
+        // Load saved theme
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('theme-icon').textContent = '☀️';
+                document.getElementById('theme-label').textContent = 'Claro';
+            }
+        })();
+
+        // View switching
+        function switchView(view) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('view-' + view).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ===== POSTS SYSTEM =====
+        const POSTS = [
+            { week: 'semana1', day: 'Segunda', pillar: 'custos', pillarLabel: '💰 Custos', title: 'Reduzir 10-20% dos custos de cloud é possível', text: `Segundo a McKinsey, a maioria das organizações ainda pode reduzir entre 10% e 20% dos custos de nuvem com uma gestão mais eficiente da infraestrutura.\n\nO ponto é: não se trata de cortar recursos. Se trata de entender o que está rodando, por que está rodando, e se o dimensionamento faz sentido para o momento do negócio.\n\nUma abordagem de FinOps — onde times de tecnologia e financeiro trabalham juntos com visibilidade real do consumo — permite:\n\n→ Identificar recursos ociosos ou superdimensionados\n→ Criar políticas de desligamento e escalonamento automático\n→ Tomar decisões de investimento em cloud baseadas em dados, não em achismo\n\nEmpresas que implementam essa governança de custos conseguem previsibilidade financeira e, ao mesmo tempo, mantêm a performance e a segurança que a operação exige.\n\nNa sua operação hoje, o time financeiro e o time de infra conversam sobre a fatura de cloud — ou cada um vê um pedaço isolado?` },
+            { week: 'semana1', day: 'Quarta', pillar: 'migracao', pillarLabel: '🚀 Migração', title: 'O impacto da aquisição VMware pela Broadcom', text: `De acordo com a Gartner, mais de 60% das empresas que utilizam VMware estão reavaliando suas estratégias de infraestrutura após a aquisição pela Broadcom.\n\nOs motivos são claros: mudanças no modelo de licenciamento, aumento de custos e incerteza sobre o futuro do portfólio.\n\nPara muitas organizações, migrar workloads VMware para a nuvem pública (especialmente AWS) deixou de ser uma opção futura e virou uma decisão financeira urgente.\n\nUma migração bem estruturada começa por:\n\n→ Mapeamento do ambiente atual (o que migra, o que moderniza, o que desliga)\n→ Planejamento por fases com validação em cada etapa\n→ Análise de TCO comparando o cenário atual vs. cloud\n\nEmpresas que fazem esse movimento com planejamento conseguem reduzir custos de licenciamento e ganhar elasticidade — sem comprometer a operação.\n\nSua empresa já sentiu o impacto das mudanças de licenciamento da VMware? Como estão lidando com isso?` },
+            { week: 'semana1', day: 'Quinta', pillar: 'bastidores', pillarLabel: '🎯 Bastidores', title: 'O que aprendi ouvindo líderes de TI toda semana', text: `Na última semana, tive 8 conversas com líderes de TI de empresas diferentes.\n\nUm padrão que apareceu em quase todas: a sensação de que a infraestrutura cresceu mais rápido do que a capacidade de governar.\n\n"A gente foi adotando serviços e quando viu, ninguém tem visão completa do que está rodando."\n\nIsso não é falha de gestão. É consequência natural de empresas que crescem rápido e priorizam entrega.\n\nO ponto é: em algum momento, parar para organizar a casa deixa de ser "bom ter" e vira necessidade operacional e financeira.\n\nEmpresas que reservam tempo para esse tipo de revisão conseguem mais clareza nas decisões — e geralmente descobrem que estão mais perto de resolver do que imaginavam.\n\nNa sua operação, quando foi a última vez que alguém olhou a infra "de cima" com calma?` },
+            { week: 'semana1', day: 'Sexta', pillar: 'observabilidade', pillarLabel: '📊 Observabilidade', title: '70% dos incidentes poderiam ser previstos', text: `Segundo o Gartner, até 2026, 70% das organizações que implementarem observabilidade vão conseguir identificar e corrigir problemas antes que impactem o usuário final.\n\nA diferença entre monitoramento e observabilidade é sutil mas muda tudo:\n\n→ Monitoramento reage quando algo quebra\n→ Observabilidade antecipa o problema antes de virar incidente\n\nÉ como a diferença entre ir ao médico quando está doente vs. fazer check-up preventivo.\n\nEmpresas que adotam observabilidade como cultura — e não apenas como ferramenta — reduzem o MTTR (tempo médio de resolução) em até 60% e ganham previsibilidade operacional.\n\nO resultado: menos incêndios, menos madrugadas, e um time de infra que consegue focar em evolução ao invés de sobrevivência.\n\nHoje, sua equipe de infra consegue antecipar problemas — ou só reage quando o alerta toca?` },
+            { week: 'semana2', day: 'Segunda', pillar: 'migracao', pillarLabel: '🚀 Migração', title: 'Lift-and-shift não é migração, é mudança de endereço', text: `Segundo a AWS, empresas que modernizam durante a migração (ao invés de apenas replicar o on-premises na nuvem) obtêm em média 30% mais economia e 50% mais performance.\n\nO problema é que muitas organizações tratam a migração como "pegar tudo e jogar na nuvem". Mesma arquitetura, mesma configuração, endereço diferente.\n\nIsso tem nome: lift-and-shift. E funciona como primeiro passo — mas não pode ser o único.\n\nUma estratégia de migração inteligente avalia cada workload:\n\n→ O que pode ser movido como está (lift-and-shift)\n→ O que precisa ser redimensionado para o ambiente cloud\n→ O que vale a pena modernizar (containers, serverless)\n→ O que deveria ser desligado\n\nOrganizações que fazem esse exercício antes de migrar evitam retrabalho, controlam custos desde o dia 1, e entregam mais valor ao negócio.\n\nNa sua empresa, a migração foi (ou será) planejada por workload — ou tudo foi tratado da mesma forma?` },
+            { week: 'semana2', day: 'Quarta', pillar: 'custos', pillarLabel: '💰 Custos', title: 'Empresas desperdiçam 32% dos gastos com nuvem', text: `Segundo a Flexera, empresas desperdiçam em média 32% dos seus gastos com nuvem.\n\nUm terço do investimento. Sem retorno.\n\nNão estou falando de startups sem controle. Estou falando de empresas estruturadas que simplesmente não têm visibilidade do que está rodando.\n\nOs vilões mais comuns:\n\n→ Instâncias superdimensionadas "por precaução"\n→ Ambientes de teste rodando 24/7 como se fossem produção\n→ Snapshots e backups acumulados há meses sem política de retenção\n→ Licenças duplicadas que ninguém revisou\n\nA prática de FinOps — governança financeira contínua de cloud — existe para resolver exatamente isso. Times que adotam FinOps reportam economia de 20-30% nos primeiros 6 meses, sem impacto em performance.\n\nO primeiro passo é simples: saber onde o dinheiro está indo.\n\nSua empresa tem visibilidade clara de quanto gasta em cada recurso de cloud — e por quê?` },
+            { week: 'semana2', day: 'Quinta', pillar: 'bastidores', pillarLabel: '🎯 Bastidores', title: 'A maior dúvida que ouço de CTOs', text: `Nas minhas conversas dessa semana, uma dúvida apareceu 3 vezes:\n\n"Por onde eu começo?"\n\nNão é falta de conhecimento. Esses líderes sabem o que precisa ser feito. O problema é a quantidade de frentes abertas: custo subindo, equipe enxuta, pressão por modernização, segurança, compliance...\n\nQuando tudo é prioridade, nada é prioridade.\n\nO que tenho visto funcionar nas empresas que conseguem sair desse ciclo:\n\n→ Escolher UM problema para resolver primeiro\n→ Medir o impacto real (em dinheiro ou em tempo)\n→ Usar esse resultado como argumento para o próximo projeto\n\nParece simples, mas a clareza de "vamos resolver isso primeiro" desbloqueou muita empresa que estava parada há meses.\n\nSe você é líder de TI, qual é a frente que mais te tira o sono hoje?` },
+            { week: 'semana2', day: 'Sexta', pillar: 'produtividade', pillarLabel: '💻 Produtividade', title: 'Sua empresa paga por licenças que ninguém usa?', text: `Segundo a Gartner, empresas desperdiçam entre 25% e 35% do investimento em licenças de software por falta de gestão adequada.\n\nIsso inclui ferramentas de produtividade como Google Workspace e Microsoft 365 — que são essenciais, mas muitas vezes têm planos superdimensionados para o uso real.\n\nExemplos comuns:\n\n→ Colaboradores com licença premium que só usam e-mail\n→ Usuários inativos que continuam com licença ativa\n→ Planos corporativos contratados sem revisão há anos\n\nUma gestão inteligente de licenças não significa cortar ferramentas. Significa adequar o plano ao uso real de cada equipe — garantindo que o investimento se traduza em produtividade, não em desperdício.\n\nEmpresas que fazem essa revisão periodicamente conseguem realocar orçamento para onde realmente importa.\n\nVocê sabe quantas licenças ativas sua empresa tem hoje — e quantas realmente estão sendo usadas?` },
+            { week: 'semana3', day: 'Segunda', pillar: 'observabilidade', pillarLabel: '📊 Observabilidade', title: 'O custo real de uma hora de downtime', text: `Segundo a ITIC, o custo médio de uma hora de downtime para empresas de médio e grande porte supera US$ 100.000.\n\nCem mil dólares. Por hora.\n\nE na maioria dos casos, o tempo de resolução é alto não porque o problema é complexo — mas porque falta visibilidade para encontrá-lo rápido.\n\nObservabilidade resolve isso com três pilares:\n\n→ Logs centralizados (saber o que aconteceu)\n→ Métricas em tempo real (saber o estado atual)\n→ Traces distribuídos (saber onde o gargalo está)\n\nEmpresas que implementam observabilidade de forma estruturada reduzem o MTTR em até 60% — transformando horas de investigação em minutos de correção.\n\nO investimento em observabilidade não é custo operacional. É seguro contra perdas exponencialmente maiores.\n\nSe seu principal sistema caísse agora, em quanto tempo seu time saberia exatamente o que aconteceu?` },
+            { week: 'semana3', day: 'Quarta', pillar: 'produtividade', pillarLabel: '💻 Produtividade', title: 'Google Workspace vs Microsoft 365: a pergunta certa', text: `Segundo a Statista, o mercado de ferramentas de produtividade em nuvem cresce 15% ao ano — e a maioria das empresas opera com Google Workspace ou Microsoft 365.\n\nMas a pergunta que mais ouço dos gestores não é "qual é melhor?" — é "como sei se estou no plano certo?"\n\nE faz sentido. Ambas as plataformas têm múltiplos planos com funcionalidades diferentes. A decisão vai além de preferência:\n\n→ Qual o perfil de uso real dos colaboradores?\n→ Existem funcionalidades contratadas que ninguém utiliza?\n→ O plano atual atende compliance e segurança?\n→ Faz sentido ter planos diferentes por departamento?\n\nEmpresas que fazem uma revisão periódica do licenciamento — alinhando plano ao uso real — conseguem otimizar o investimento sem perder produtividade.\n\nÀs vezes, a economia está em adequar o que já existe, não em trocar de plataforma.\n\nSua empresa revisou o plano de licenciamento de produtividade nos últimos 12 meses?` },
+            { week: 'semana3', day: 'Quinta', pillar: 'bastidores', pillarLabel: '🎯 Bastidores', title: 'Confiança se constrói antes da primeira ligação', text: `Um dado da LinkedIn Sales Solutions: vendedores que compartilham conteúdo regularmente têm 45% mais chances de atingir suas metas.\n\nEu vivi isso na prática.\n\nAntes, quando ligava para um lead, precisava explicar quem eu era, o que fazia, por que ele deveria me ouvir. A barreira era alta.\n\nHoje, muitas vezes a pessoa já viu meu nome no feed. Já leu algo que fez sentido. Já associa meu perfil ao mercado de cloud.\n\nA conversa começa diferente. Começa com contexto.\n\nIsso não é mágica — é consistência. Aparecer no feed com conteúdo que faz sentido para o decisor cria uma camada de familiaridade que nenhum cold call consegue.\n\nO resultado: menos rejeição, mais abertura, conversas que fluem.\n\nSe você trabalha com vendas B2B, seu ICP sabe quem você é antes de você entrar em contato?` },
+            { week: 'semana3', day: 'Sexta', pillar: 'custos', pillarLabel: '💰 Custos', title: 'Reserved Instances: economia ou armadilha?', text: `Segundo a AWS, Reserved Instances podem gerar até 72% de economia comparadas ao modelo on-demand.\n\nMas aqui vai o ponto que muita empresa ignora: reservar sem planejamento pode custar mais do que economizar.\n\nSe o workload muda, se a aplicação escala diferente do previsto, ou se ninguém revisa as reservas periodicamente — a economia vira custo preso.\n\nA abordagem que funciona:\n\n→ Analisar o histórico de uso antes de reservar (mínimo 3 meses)\n→ Reservar apenas o baseline previsível\n→ Usar Savings Plans para workloads variáveis\n→ Revisar trimestralmente se as reservas ainda fazem sentido\n\nEmpresas com governança de custos madura combinam reserved, savings plans e on-demand de forma estratégica — maximizando economia com flexibilidade.\n\nNa sua empresa, as reservas de cloud foram calculadas com base em dados — ou em estimativa?` },
+            { week: 'semana4', day: 'Segunda', pillar: 'produtividade', pillarLabel: '💻 Produtividade', title: 'Colaboração remota e o papel do licenciamento', text: `Segundo a McKinsey, equipes que utilizam ferramentas de colaboração de forma integrada são 20-25% mais produtivas do que as que operam com ferramentas desconectadas.\n\nMas "ter a ferramenta" não é o mesmo que "usar bem a ferramenta".\n\nMuitas empresas contratam Google Workspace ou Microsoft 365 e utilizam apenas e-mail e armazenamento. O restante das funcionalidades — automações, integração entre apps, segurança avançada, compliance — fica subutilizado.\n\nUm licenciamento bem gerido vai além de pagar a conta:\n\n→ Adequar o plano ao perfil de cada equipe\n→ Ativar funcionalidades de segurança incluídas no plano\n→ Treinar times para usar o que já está disponível\n→ Revisar periodicamente se o plano ainda faz sentido\n\nO resultado: times mais produtivos, ambiente mais seguro, e investimento que se justifica — porque está sendo usado de verdade.\n\nNa sua empresa, as ferramentas de produtividade estão sendo usadas no potencial total — ou só uma fração?` },
+            { week: 'semana4', day: 'Quarta', pillar: 'migracao', pillarLabel: '🚀 Migração', title: 'Disaster Recovery: a pergunta que ninguém quer ouvir', text: `Segundo a Forrester, 58% das empresas que sofreram um incidente grave de indisponibilidade não tinham um plano de Disaster Recovery testado.\n\nA pergunta que faço para líderes de TI é simples: "Se seu principal sistema caísse agora, em quanto tempo vocês voltam?"\n\nA maioria hesita na resposta.\n\nDisaster Recovery não precisa ser complexo nem caro. Precisa existir — e ser testado.\n\nUm plano de DR bem estruturado na nuvem inclui:\n\n→ RPO e RTO definidos por aplicação (quanto posso perder, quanto posso ficar fora)\n→ Backups automatizados com política de retenção\n→ Ambiente de recuperação provisionável em minutos\n→ Testes periódicos simulando cenários reais\n\nA nuvem viabilizou DR para empresas que antes não tinham orçamento para isso. O custo de estar preparado é uma fração do custo de não estar.\n\nSe seu principal sistema caísse agora — quanto tempo levaria para voltar?` },
+            { week: 'semana4', day: 'Quinta', pillar: 'bastidores', pillarLabel: '🎯 Bastidores', title: 'O erro mais comum nas primeiras abordagens', text: `Uma pesquisa da HubSpot mostra que 69% dos compradores B2B dizem que a principal razão para aceitar uma conversa é o vendedor ter demonstrado conhecimento relevante sobre seu negócio.\n\nIsto é: não é sobre o que você vende. É sobre o quanto você entende do mundo do outro.\n\nEu errei muito nisso no início. Abordava leads falando sobre soluções antes de entender o contexto.\n\nHoje minha abordagem é diferente:\n\n→ Antes de qualquer contato, eu entendo o cenário da empresa\n→ Procuro o que o decisor está postando, comentando, enfrentando\n→ A primeira mensagem é sobre ele, não sobre mim\n\nO resultado: conversas que acontecem naturalmente, sem a barreira do "quem é você e o que quer?"\n\nGerar valor antes de pedir atenção não é técnica — é respeito.\n\nSe você recebe abordagens no LinkedIn, o que faz você responder uma mensagem ao invés de ignorar?` },
+            { week: 'semana4', day: 'Sexta', pillar: 'observabilidade', pillarLabel: '📊 Observabilidade', title: 'IA sem infra é castelo de areia', text: `Segundo a IDC, 65% das iniciativas de IA em empresas falham ou são abandonadas nos primeiros 12 meses — e a principal causa não é a IA em si, mas a infraestrutura que não suporta.\n\nIA Generativa consome recursos massivos: processamento, memória, armazenamento, rede.\n\nSe a infraestrutura atual não suporta a operação do dia a dia com eficiência, colocar IA em cima é construir castelo de areia.\n\nO caminho que empresas bem-sucedidas seguem:\n\n→ Primeiro: otimizar e estabilizar a infra atual\n→ Segundo: implementar observabilidade para ter visibilidade real\n→ Terceiro: experimentar IA com provas de conceito controladas\n\nPular etapas não acelera — gera frustração, custo alto e projetos engavetados.\n\nA boa notícia: arrumar a casa antes da IA não é perda de tempo. É garantir que o investimento em inovação vai gerar resultado real.\n\nSua empresa está pensando em IA — já olhou se a infraestrutura está pronta para isso?` }
+        ];
+
+        function renderPosts(filter = 'all') {
+            const container = document.getElementById('posts-container');
+            container.innerHTML = '';
+            const filtered = filter === 'all' ? POSTS : POSTS.filter(p => p.week === filter || p.pillar === filter);
+
+            filtered.forEach((post, i) => {
+                const div = document.createElement('div');
+                div.className = 'post-item';
+                div.innerHTML = `
+                    <div class="post-item-header">
+                        <div class="post-item-meta">
+                            <span class="badge badge-week">${post.week.replace('semana', 'Sem ')}</span>
+                            <span class="badge badge-day">${post.day}</span>
+                            <span class="badge badge-pillar">${post.pillarLabel}</span>
+                        </div>
+                    </div>
+                    <strong style="font-size:0.88rem; color:var(--text-primary);">${post.title}</strong>
+                    <div class="post-item-content" id="post-content-${i}">${post.text}</div>
+                    <div class="post-actions">
+                        <button class="btn-copy" onclick="copyPost(${i}, this)">📋 Copiar texto</button>
+                        <button class="btn-expand" onclick="togglePost(${i})">Expandir</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function filterPosts(filter) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderPosts(filter);
+        }
+
+        function copyPost(index, btn) {
+            const filtered = document.querySelectorAll('.post-item-content');
+            const text = POSTS[index].text;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '✓ Copiado!';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '📋 Copiar texto'; btn.classList.remove('copied'); }, 2000);
+            });
+        }
+
+        function togglePost(index) {
+            const el = document.getElementById('post-content-' + index);
+            el.classList.toggle('expanded');
+        }
+
+        // Init posts
+        renderPosts();
+
+        // ===== TEMPLATES COPY =====
+        function copyTemplate(btn) {
+            const msg = btn.parentElement;
+            const paragraphs = msg.querySelectorAll('p:not(.msg-label)');
+            const text = Array.from(paragraphs).map(p => p.textContent).join('\n');
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '✓';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+            });
+        }
+
+        // ===== DASHBOARD =====
+        function saveDashDate(val) {
+            localStorage.setItem('ss-dash-start', val);
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            const startStr = localStorage.getItem('ss-dash-start');
+            const dateInput = document.getElementById('dash-start-date');
+            if (startStr) dateInput.value = startStr;
+
+            if (!startStr) return;
+
+            const start = new Date(startStr);
+            const now = new Date();
+            const diffMs = now - start;
+            const diffDays = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1);
+            const day = Math.min(diffDays, 90);
+            const week = Math.min(Math.ceil(day / 7), 13);
+            const month = day <= 30 ? 1 : day <= 60 ? 2 : 3;
+            const progress = Math.min(Math.round((day / 90) * 100), 100);
+
+            document.getElementById('dash-day').textContent = day;
+            document.getElementById('dash-week').textContent = week;
+            document.getElementById('dash-month').textContent = month;
+            document.getElementById('dash-progress').textContent = progress + '%';
+            document.getElementById('dash-bar').style.width = progress + '%';
+
+            // Update timeline
+            const items = document.querySelectorAll('#dash-timeline .timeline-item');
+            items.forEach((item, i) => {
+                item.classList.remove('active', 'done');
+                if (i < month - 1) item.classList.add('done');
+                else if (i === month - 1) item.classList.add('active');
+            });
+        }
+
+        updateDashboard();
+
+        // ===== DASHBOARD POSTS CHECKLIST =====
+        function getDashPosts() {
+            return JSON.parse(localStorage.getItem('ss-dash-posts') || '{}');
+        }
+
+        function saveDashPosts(data) {
+            localStorage.setItem('ss-dash-posts', JSON.stringify(data));
+        }
+
+        function renderDashPosts() {
+            const container = document.getElementById('dash-posts-checklist');
+            const saved = getDashPosts();
+            const doneCount = POSTS.filter((_, i) => saved[i] && saved[i].done).length;
+            const startStr = localStorage.getItem('ss-dash-start');
+            const startDate = startStr ? new Date(startStr) : null;
+            const now = new Date();
+
+            // Map posts to expected week (4 posts per week)
+            function getPostStatus(index) {
+                const postData = saved[index] || { done: false, date: '' };
+                if (postData.done) return 'done';
+                if (!startDate) return 'future';
+
+                const weekNum = Math.floor(index / 4); // 0-based week
+                const expectedEnd = new Date(startDate);
+                expectedEnd.setDate(expectedEnd.getDate() + ((weekNum + 1) * 7));
+
+                const expectedStart = new Date(startDate);
+                expectedStart.setDate(expectedStart.getDate() + (weekNum * 7));
+
+                if (now > expectedEnd) return 'late';
+                if (now >= expectedStart && now <= expectedEnd) return 'upcoming';
+                return 'future';
+            }
+
+            let rowsHtml = '';
+            POSTS.forEach((post, i) => {
+                const postData = saved[i] || { done: false, date: '' };
+                const status = getPostStatus(i);
+                rowsHtml += `
+                    <div class="dash-post-row ${status}">
+                        <span class="status-dot ${status}"></span>
+                        <input type="checkbox" ${postData.done ? 'checked' : ''} onchange="toggleDashPost(${i}, this.checked)">
+                        <div class="post-info">
+                            <div class="post-name">${post.title}</div>
+                            <div class="post-meta-sm">${post.week.replace('semana', 'Sem ')} · ${post.day} · ${post.pillarLabel}</div>
+                        </div>
+                        <input type="date" value="${postData.date || ''}" onchange="setDashPostDate(${i}, this.value)" title="Data de publicação">
+                    </div>
+                `;
+            });
+
+            const lateCount = POSTS.filter((_, i) => getPostStatus(i) === 'late').length;
+            const upcomingCount = POSTS.filter((_, i) => getPostStatus(i) === 'upcoming').length;
+
+            container.innerHTML = `
+                <div class="dash-post-summary">
+                    <span class="summary-num">${doneCount}/${POSTS.length}</span>
+                    <span class="summary-text">publicados</span>
+                    ${lateCount > 0 ? `<span style="font-size:0.75rem; color:var(--danger); font-weight:600; margin-left:12px;">⚠ ${lateCount} atrasado${lateCount > 1 ? 's' : ''}</span>` : ''}
+                    ${upcomingCount > 0 ? `<span style="font-size:0.75rem; color:var(--accent); font-weight:500; margin-left:8px;">→ ${upcomingCount} esta semana</span>` : ''}
+                    <div class="progress-track" style="flex:1; height:6px; border-radius:3px; margin-left:12px;">
+                        <div class="progress-fill" style="width:${Math.round((doneCount/POSTS.length)*100)}%; background:var(--success); height:100%; border-radius:3px;"></div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:14px; margin-bottom:10px; font-size:0.7rem; color:var(--text-muted);">
+                    <span><span class="status-dot done" style="display:inline-block; vertical-align:middle; margin-right:4px;"></span> Publicado</span>
+                    <span><span class="status-dot upcoming" style="display:inline-block; vertical-align:middle; margin-right:4px;"></span> Esta semana</span>
+                    <span><span class="status-dot late" style="display:inline-block; vertical-align:middle; margin-right:4px;"></span> Atrasado</span>
+                    <span><span class="status-dot future" style="display:inline-block; vertical-align:middle; margin-right:4px;"></span> Futuro</span>
+                </div>
+                <div class="dash-posts-list" id="dash-posts-list">
+                    ${rowsHtml}
+                </div>
+                <button class="btn-load-more" id="btn-load-more" onclick="togglePostsList()">Ver todos os posts ▾</button>
+            `;
+        }
+
+        function togglePostsList() {
+            const list = document.getElementById('dash-posts-list');
+            const btn = document.getElementById('btn-load-more');
+            list.classList.toggle('expanded');
+            if (list.classList.contains('expanded')) {
+                btn.textContent = 'Recolher ▴';
+            } else {
+                btn.textContent = 'Ver todos os posts ▾';
+            }
+        }
+
+        function toggleDashPost(index, checked) {
+            const saved = getDashPosts();
+            if (!saved[index]) saved[index] = { done: false, date: '' };
+            saved[index].done = checked;
+            if (checked && !saved[index].date) {
+                saved[index].date = new Date().toISOString().split('T')[0];
+            }
+            saveDashPosts(saved);
+            renderDashPosts();
+        }
+
+        function setDashPostDate(index, date) {
+            const saved = getDashPosts();
+            if (!saved[index]) saved[index] = { done: false, date: '' };
+            saved[index].date = date;
+            saveDashPosts(saved);
+        }
+
+        renderDashPosts();
+
+        // ===== DASHBOARD METRICS (WEEKLY HISTORY) =====
+        const METRIC_FIELDS = ['metric-conexoes', 'metric-aceitas', 'metric-impressoes', 'metric-comentarios', 'metric-inbox-env', 'metric-respostas', 'metric-reunioes', 'metric-curtidas'];
+        let currentMetricWeek = 1;
+
+        function getAllMetrics() {
+            return JSON.parse(localStorage.getItem('ss-metrics-history') || '{}');
+        }
+
+        function saveMetrics() {
+            const all = getAllMetrics();
+            const weekData = {};
+            METRIC_FIELDS.forEach(id => {
+                weekData[id] = document.getElementById(id).value;
+            });
+            all[currentMetricWeek] = weekData;
+            localStorage.setItem('ss-metrics-history', JSON.stringify(all));
+            renderMetricsHistory();
+        }
+
+        function loadMetricsForWeek(week) {
+            const all = getAllMetrics();
+            const weekData = all[week] || {};
+            METRIC_FIELDS.forEach(id => {
+                document.getElementById(id).value = weekData[id] || '';
+            });
+            document.getElementById('metric-week-display').textContent = 'Semana ' + week;
+        }
+
+        function changeMetricWeek(delta) {
+            const newWeek = currentMetricWeek + delta;
+            if (newWeek < 1 || newWeek > 13) return;
+            currentMetricWeek = newWeek;
+            loadMetricsForWeek(currentMetricWeek);
+        }
+
+        function renderMetricsHistory() {
+            const all = getAllMetrics();
+            const weeks = Object.keys(all).sort((a, b) => a - b);
+            const container = document.getElementById('metrics-history');
+
+            if (weeks.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '<p style="font-size:0.78rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Histórico</p>';
+            html += '<div class="table-wrap"><table><thead><tr><th>Sem</th><th>Conex. Env.</th><th>Aceitas</th><th>Impr.</th><th>Coment.</th><th>Inbox</th><th>Resp.</th><th>Reuniões</th><th>Curtidas</th></tr></thead><tbody>';
+
+            weeks.forEach(w => {
+                const d = all[w];
+                const isCurrentWeek = parseInt(w) === currentMetricWeek;
+                const style = isCurrentWeek ? 'font-weight:600; color:var(--accent);' : '';
+                html += `<tr style="${style}">
+                    <td>${w}</td>
+                    <td>${d['metric-conexoes'] || '—'}</td>
+                    <td>${d['metric-aceitas'] || '—'}</td>
+                    <td>${d['metric-impressoes'] || '—'}</td>
+                    <td>${d['metric-comentarios'] || '—'}</td>
+                    <td>${d['metric-inbox-env'] || '—'}</td>
+                    <td>${d['metric-respostas'] || '—'}</td>
+                    <td>${d['metric-reunioes'] || '—'}</td>
+                    <td>${d['metric-curtidas'] || '—'}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        // Init metrics
+        loadMetricsForWeek(currentMetricWeek);
+        renderMetricsHistory();
+
+        // ===== PROFILE CHECKLIST =====
+        const PROFILE_ITEMS = ['pf-headline', 'pf-foto', 'pf-banner', 'pf-about', 'pf-exp', 'pf-featured', 'pf-skills', 'pf-config-criador', 'pf-config-url', 'pf-config-hashtags', 'pf-config-contato'];
+
+        function saveProfile() {
+            const data = {};
+            PROFILE_ITEMS.forEach(id => {
+                data[id] = document.getElementById(id).checked;
+            });
+            localStorage.setItem('ss-profile', JSON.stringify(data));
+            updateProfileProgress();
+        }
+
+        function loadProfile() {
+            const data = JSON.parse(localStorage.getItem('ss-profile') || '{}');
+            PROFILE_ITEMS.forEach(id => {
+                if (data[id]) document.getElementById(id).checked = true;
+            });
+            updateProfileProgress();
+        }
+
+        function updateProfileProgress() {
+            const checked = PROFILE_ITEMS.filter(id => document.getElementById(id).checked).length;
+            const pct = Math.round((checked / PROFILE_ITEMS.length) * 100);
+            document.getElementById('profile-bar').style.width = pct + '%';
+            document.getElementById('profile-pct').textContent = pct + '%';
+        }
+
+        loadProfile();
+
+        // ===== NOTES SYSTEM =====
+        const CHECKLIST_ITEMS = [];
+
+        function getNotes() {
+            const data = localStorage.getItem('ss-notes');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveNotes(notes) {
+            localStorage.setItem('ss-notes', JSON.stringify(notes));
+        }
+
+        function renderNotes() {
+            const notes = getNotes();
+            const container = document.getElementById('notes-container');
+            const empty = document.getElementById('empty-notes');
+
+            if (notes.length === 0) {
+                empty.style.display = 'block';
+                container.querySelectorAll('.note-card').forEach(el => el.remove());
+                return;
+            }
+
+            empty.style.display = 'none';
+            container.querySelectorAll('.note-card').forEach(el => el.remove());
+
+            notes.forEach((note, index) => {
+                const card = document.createElement('div');
+                card.className = 'note-card';
+                card.innerHTML = `
+                    <div class="note-card-header">
+                        <span style="font-size:0.75rem; color:var(--text-muted);">${note.date}</span>
+                        <button class="btn btn-danger" onclick="deleteNote(${index})">Excluir</button>
+                    </div>
+                    <textarea
+                        placeholder="Escreva aqui..."
+                        oninput="updateNoteText(${index}, this.value)"
+                        style="width:100%; min-height:80px; border:1px solid var(--border); border-radius:8px; padding:12px; font-family:'Inter',sans-serif; font-size:0.85rem; color:var(--text-primary); background:var(--bg-secondary); resize:vertical; line-height:1.6;"
+                    >${note.text || ''}</textarea>
+                    <div class="note-actions">
+                        <span class="saved-msg" id="saved-${index}">✓ Salvo</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addNote() {
+            const notes = getNotes();
+            const now = new Date();
+            const date = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+            notes.unshift({ text: '', date: date });
+            saveNotes(notes);
+            renderNotes();
+        }
+
+        let saveTimeout;
+        function updateNoteText(index, value) {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                const notes = getNotes();
+                notes[index].text = value;
+                saveNotes(notes);
+                const msg = document.getElementById('saved-' + index);
+                if (msg) {
+                    msg.classList.add('show');
+                    setTimeout(() => msg.classList.remove('show'), 1500);
+                }
+            }, 400);
+        }
+
+        function deleteNote(index) {
+            if (!confirm('Excluir esta anotação?')) return;
+            const notes = getNotes();
+            notes.splice(index, 1);
+            saveNotes(notes);
+            renderNotes();
+        }
+
+        renderNotes();
+    </script>
+
+</body>
+</html>
