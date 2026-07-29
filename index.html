@@ -2515,16 +2515,20 @@
                 <p>16 posts prontos para copiar e publicar. Clique em "Copiar" para enviar direto ao LinkedIn.</p>
 
                 <div class="post-filters" style="margin-top: 14px;">
-                    <button class="filter-btn active" onclick="filterPosts('all')">Todos</button>
-                    <button class="filter-btn" onclick="filterPosts('semana1')">Semana 1</button>
-                    <button class="filter-btn" onclick="filterPosts('semana2')">Semana 2</button>
-                    <button class="filter-btn" onclick="filterPosts('semana3')">Semana 3</button>
-                    <button class="filter-btn" onclick="filterPosts('semana4')">Semana 4</button>
+                    <span style="font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Semana:</span>
+                    <button class="filter-btn active" onclick="filterPosts('all')">Todas</button>
+                    <button class="filter-btn" onclick="filterPosts('semana1')">1</button>
+                    <button class="filter-btn" onclick="filterPosts('semana2')">2</button>
+                    <button class="filter-btn" onclick="filterPosts('semana3')">3</button>
+                    <button class="filter-btn" onclick="filterPosts('semana4')">4</button>
+                </div>
+                <div class="post-filters">
+                    <span style="font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Pilar:</span>
                     <button class="filter-btn" onclick="filterPosts('custos')">💰 Custos</button>
                     <button class="filter-btn" onclick="filterPosts('migracao')">🚀 Migração</button>
-                    <button class="filter-btn" onclick="filterPosts('observabilidade')">📊 Observabilidade</button>
+                    <button class="filter-btn" onclick="filterPosts('observabilidade')">📊 Observab.</button>
                     <button class="filter-btn" onclick="filterPosts('bastidores')">🎯 Bastidores</button>
-                    <button class="filter-btn" onclick="filterPosts('produtividade')">💻 Produtividade</button>
+                    <button class="filter-btn" onclick="filterPosts('produtividade')">💻 Produtiv.</button>
                 </div>
 
                 <div id="posts-container"></div>
